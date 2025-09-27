@@ -7,10 +7,6 @@
     <div class="card p-5 shadow-lg rounded-4" style="width: 500px; max-width: 90%; background: rgba(255,255,255,0.25); backdrop-filter: blur(20px);">
         <h3 class="text-center mb-4 fw-bold text-dark" style="font-size: 2rem;">Login Pemilik</h3>
 
-        @if(session('success'))
-            <div class="alert alert-success">{{ session('success') }}</div>
-        @endif
-
         <form method="POST" action="{{ route('login.post') }}">
             @csrf
 
@@ -69,4 +65,27 @@
         transform: translateY(-2px);
     }
 </style>
+
+<!-- SweetAlert2 -->
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script>
+    @if(session('success'))
+        Swal.fire({
+            icon: 'success',
+            title: 'Berhasil',
+            text: '{{ session('success') }}',
+            showConfirmButton: false,
+            timer: 2000
+        });
+    @endif
+
+    @if(session('error'))
+        Swal.fire({
+            icon: 'error',
+            title: 'Gagal',
+            text: '{{ session('error') }}',
+            showConfirmButton: true
+        });
+    @endif
+</script>
 @endsection
