@@ -1,5 +1,5 @@
 {{-- resources/views/themeadmin/sidebar.blade.php --}}
-<ul class="navbar-nav bg-gradient-primary sidebar sidebar-dark accordion" id="accordionSidebar">
+<ul class="navbar-nav sidebar sidebar-dark accordion bg-gradient-primary" id="accordionSidebar">
 
     <!-- Sidebar - Brand -->
     <a class="sidebar-brand d-flex align-items-center justify-content-center" href="{{ url('/pemilik/dashboard') }}">
@@ -27,22 +27,22 @@
     </div>
 
     <!-- Dropdown Manajemen Kos -->
-    <li class="nav-item {{ request()->is('pemilik/kosan-terdaftar*') || request()->is('pemilik/daftar-kosan*') || request()->is('pemilik/status-pendaftaran*') ? 'active' : '' }}">
+    <li class="nav-item {{ request()->is('pemilik/kosan-terdaftar*') || request()->is('pemilik/pendaftaran/create*') || request()->is('pemilik/status-pendaftaran*') ? 'active' : '' }}">
         <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseManajemenKos"
             aria-expanded="true" aria-controls="collapseManajemenKos">
             <i class="fas fa-fw fa-building"></i>
             <span>Manajemen Kos</span>
         </a>
-        <div id="collapseManajemenKos" class="collapse {{ request()->is('pemilik/kosan-terdaftar*') || request()->is('pemilik/daftar-kosan*') || request()->is('pemilik/status-pendaftaran*') ? 'show' : '' }}"
+        <div id="collapseManajemenKos" class="collapse {{ request()->is('pemilik/kosan-terdaftar*') || request()->is('pemilik/pendaftaran/create*') || request()->is('pemilik/status-pendaftaran*') ? 'show' : '' }}"
             aria-labelledby="headingManajemenKos" data-parent="#accordionSidebar">
             <div class="bg-white py-2 collapse-inner rounded">
                 <a class="collapse-item {{ request()->is('pemilik/kosan-terdaftar*') ? 'active' : '' }}" href="{{ url('/pemilik/kosan-terdaftar') }}">
                     <i class="fas fa-fw fa-list"></i> Kosan Terdaftar
                 </a>
-                <a class="collapse-item {{ request()->is('pemilik/daftar-kosan*') ? 'active' : '' }}" href="{{ url('/pemilik/daftar-kosan') }}">
+                <a class="collapse-item {{ request()->is('pendaftaran/create*') ? 'active' : '' }}" href="{{ route('pendaftaran.create') }}">
                     <i class="fas fa-fw fa-plus-circle"></i> Daftarkan Kosan
                 </a>
-                <a class="collapse-item {{ request()->is('pemilik/status-pendaftaran*') ? 'active' : '' }}" href="{{ url('/pemilik/status-pendaftaran') }}">
+                <a class="collapse-item {{ request()->is('pemilik/status-pendaftaran*') ? 'active' : '' }}" href="{{ route('pemilik.statuspendaftaran') }}">
                     <i class="fas fa-fw fa-clipboard-list"></i> Status Pendaftaran
                 </a>
             </div>
