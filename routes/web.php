@@ -2,6 +2,8 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\SawController;
+use App\Http\Controllers\KosController;
 use App\Http\Controllers\c_pendaftaran;
 
 /*
@@ -60,3 +62,28 @@ Route::prefix('pemilik')->group(function () {
     Route::delete('/pendaftaran/{id}', [c_pendaftaran::class, 'destroy'])
         ->name('pendaftaran.destroy');
 });
+
+Route::get('/admin/spk', [App\Http\Controllers\SawController::class, 'index'])->name('admin.spk.index');
+
+
+// Route untuk pemilik kos
+Route::get('/kos', [KosController::class, 'index'])->name('kos.index');
+Route::get('/kos/create', [KosController::class, 'create'])->name('kos.create');
+Route::post('/kos', [KosController::class, 'store'])->name('kos.store');
+
+// Route untuk admin (verifikasi kos)
+Route::get('/admin/kos/verifikasi', [KosController::class, 'verifikasi'])->name('admin.kos.verifikasi');
+Route::post('/admin/kos/{id}/approve', [KosController::class, 'approve'])->name('admin.kos.approve');
+Route::post('/admin/kos/{id}/reject', [KosController::class, 'reject'])->name('admin.kos.reject');
+
+
+Route::prefix('admin')->name('admin.')->group(function(){
+    Route::resource('kriteria', \App\Http\Controllers\Admin\KriteriaController::class);
+});
+
+Route::prefix('admin')->name('admin.')->group(function(){
+    Route::get('penilaian/create', [\App\Http\Controllers\Admin\PenilaianController::class,'create'])->name('penilaian.create');
+    Route::post('penilaian/store', [\App\Http\Controllers\Admin\PenilaianController::class,'store'])->name('penilaian.store');
+});
+
+

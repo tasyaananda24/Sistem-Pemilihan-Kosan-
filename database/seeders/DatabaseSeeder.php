@@ -13,7 +13,7 @@ class DatabaseSeeder extends Seeder
     {
         // Menjalankan seeder AdminSeeder
         $this->call([
-            \Database\Seeders\AdminSeeder::class,
+            SpkSeeder::class,
         ]);
 
         // Membuat user dummy (opsional)
@@ -22,4 +22,5 @@ class DatabaseSeeder extends Seeder
             'email' => 'test@example.com',
         ]);
     }
+    
 }
