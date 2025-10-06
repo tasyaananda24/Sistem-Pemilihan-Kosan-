@@ -6,6 +6,7 @@ use App\Http\Controllers\SawController;
 use App\Http\Controllers\KosanController;
 use App\Http\Controllers\KosController;
 use App\Http\Controllers\PemilikController;
+use App\Http\Controllers\Admin\KosanAdminController;
 
 /*
 |--------------------------------------------------------------------------
@@ -37,6 +38,8 @@ Route::controller(AuthController::class)->group(function () {
 |--------------------------------------------------------------------------
 */
 Route::prefix('admin')->name('admin.')->group(function () {
+
+    // Dashboard admin
     Route::get('dashboard', function () {
         return view('admin.dashboard');
     })->name('dashboard');
@@ -44,11 +47,13 @@ Route::prefix('admin')->name('admin.')->group(function () {
     // Halaman SPK
     Route::get('spk', [SawController::class, 'index'])->name('spk.index');
 
-    // Verifikasi Kos (Admin)
-    Route::controller(KosController::class)->group(function () {
-        Route::get('kos/verifikasi', 'verifikasi')->name('kos.verifikasi');
-        Route::post('kos/{id}/approve', 'approve')->name('kos.approve');
-        Route::post('kos/{id}/reject', 'reject')->name('kos.reject');
+    // Verifikasi Kosan Admin
+    Route::controller(KosanAdminController::class)->group(function () {
+        Route::get('kosan/verifikasi', 'index')->name('kosan.verifikasi'); // list kosan pending
+        Route::post('kosan/verifikasi/{id}', 'verifikasi')->name('kosan.verifikasi.update'); // approve / reject
+
+        // Tampilkan semua kosan yang sudah di-approve (Admin)
+        Route::get('kosan/approved', 'approved')->name('kosan.approved'); // halaman admin kosan approved
     });
 
     // Kriteria & Penilaian (SPK)
@@ -73,13 +78,14 @@ Route::prefix('pemilik')->name('pemilik.')->group(function () {
     |--------------------------------------------------------------------------
     */
     Route::controller(KosanController::class)->group(function () {
-        Route::get('kosan', 'index')->name('kosan.index');
+        Route::get('kosan', 'index')->name('kosan.index'); // hanya kosan approved milik pemilik
         Route::get('kosan/create', 'create')->name('kosan.create');
         Route::post('kosan', 'store')->name('kosan.store');
         Route::get('kosan/{id}/edit', 'edit')->name('kosan.edit');
         Route::put('kosan/{id}', 'update')->name('kosan.update');
         Route::delete('kosan/{id}', 'destroy')->name('kosan.destroy');
-        Route::get('kosan/verifikasi', 'verifikasiIndex')->name('kosan.verifikasi');
-        Route::patch('kosan/{id}/verifikasi', 'verifikasi')->name('kosan.verifikasi.update');
+
+        // Menu status verifikasi pemilik (hanya melihat status, tidak approve/reject)
+        Route::get('kosan/verifikasi', 'verifikasiIndex')->name('kosan.verifikasi'); 
     });
 });

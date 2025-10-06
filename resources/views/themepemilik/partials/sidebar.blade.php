@@ -46,7 +46,7 @@
                 </a>
                 <!-- Verifikasi Kosan -->
                 <a class="collapse-item {{ request()->is('pemilik/kosan/verifikasi*') ? 'active' : '' }}" href="{{ route('pemilik.kosan.verifikasi') }}">
-                    <i class="fas fa-fw fa-check-circle"></i> Verifikasi Kosan
+                    <i class="fas fa-fw fa-check-circle"></i> Status Pendaftaran Kos
                 </a>
             </div>
         </div>

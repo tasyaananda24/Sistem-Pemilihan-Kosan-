@@ -27,7 +27,7 @@
     </div>
 
     <!-- Data Master -->
-    <li class="nav-item {{ request()->is('admin/kosan*') || request()->is('admin/kriteria*') || request()->is('admin/alternatif*') ? 'active' : '' }}">
+    <li class="nav-item {{ request()->is('admin/kosan*') || request()->is('admin/kriteria*') || request()->is('admin/kosan/approved*') ? 'active' : '' }}">
         <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseMaster"
            aria-expanded="true" aria-controls="collapseMaster">
             <i class="fas fa-fw fa-database"></i>
@@ -42,7 +42,7 @@
                 <a class="collapse-item {{ request()->is('admin/kriteria*') ? 'active' : '' }}" href="{{ url('/admin/kriteria') }}">
                     <i class="fas fa-fw fa-list-alt mr-2"></i> Kriteria
                 </a>
-                <a class="collapse-item {{ request()->is('admin/alternatif*') ? 'active' : '' }}" href="{{ url('/admin/alternatif') }}">
+                <a class="collapse-item {{ request()->is('admin/alternatif*') ? 'active' : '' }}" href="{{ url('/admin/kosan/approved') }}">
                     <i class="fas fa-fw fa-user-friends mr-2"></i> Alternatif
                 </a>
             </div>
@@ -59,7 +59,7 @@
         <div id="collapseVerif" class="collapse {{ request()->is('admin/verifikasi*') ? 'show' : '' }}"
              aria-labelledby="headingVerif" data-parent="#accordionSidebar">
             <div class="bg-white py-2 collapse-inner rounded">
-                <a class="collapse-item {{ request()->is('admin/verifikasi*') ? 'active' : '' }}" href="{{ url('/admin/verifikasi') }}">
+                <a class="collapse-item {{ request()->is('admin/verifikasi*') ? 'active' : '' }}" href="{{ url('/admin/kosan/verifikasi') }}">
                     <i class="fas fa-fw fa-building mr-2"></i> Verifikasi Kosan
                 </a>
             </div>

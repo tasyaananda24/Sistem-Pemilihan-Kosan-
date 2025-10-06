@@ -4,24 +4,34 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\DaftarKos;
+use App\Models\KosApproved;
 use Illuminate\Support\Facades\Storage;
 
 class KosanController extends Controller
 {
-    // Menampilkan semua kosan milik user yang login
+    // ================================
+    // Tampil kosan pemilik (yang sudah approved)
+    // ================================
     public function index()
     {
-        $kosans = DaftarKos::where('user_id', auth()->id())->latest()->get();
+        $kosans = KosApproved::where('user_id', auth()->id())
+                                ->latest()
+                                ->get();
+
         return view('pemilik.kosan.index', compact('kosans'));
     }
 
+    // ================================
     // Form tambah kosan baru
+    // ================================
     public function create()
     {
         return view('pemilik.kosan.create');
     }
 
-    // Simpan data kosan baru
+    // ================================
+    // Simpan kosan baru (status pending)
+    // ================================
     public function store(Request $request)
     {
         $request->validate([
@@ -36,13 +46,10 @@ class KosanController extends Controller
             'foto_kosan' => 'nullable|image|mimes:jpg,jpeg,png|max:2048',
         ]);
 
-        // Upload foto jika ada
-       $fotoPath = null;
-if ($request->hasFile('foto_kosan')) {
-    $fotoPath = $request->file('foto_kosan')->store('foto_kosan', 'public');
-    // simpan $fotoPath langsung, contoh: foto_kosan/file.jpg
-}
-
+        $fotoPath = null;
+        if ($request->hasFile('foto_kosan')) {
+            $fotoPath = $request->file('foto_kosan')->store('foto_kosan', 'public');
+        }
 
         DaftarKos::create([
             'user_id' => auth()->id(),
@@ -55,46 +62,68 @@ if ($request->hasFile('foto_kosan')) {
             'jarak_ke_kampus' => $request->jarak_ke_kampus,
             'alamat_kosan' => $request->alamat_kosan,
             'foto_kosan' => $fotoPath,
-            'status_verifikasi' => 'pending', // default status
+            'status_verifikasi' => 'pending',
         ]);
 
-        return redirect()->route('pemilik.kosan.index')
-                         ->with('success', 'Data kos berhasil ditambahkan.');
+        return redirect()->route('pemilik.kosan.verifikasi')
+                         ->with('success', 'Data kos berhasil ditambahkan. Menunggu verifikasi admin.');
     }
 
+    // ================================
     // Hapus kosan
+    // ================================
     public function destroy($id)
     {
+        // Hapus hanya kosan milik pemilik
         $kosan = DaftarKos::where('user_id', auth()->id())->findOrFail($id);
 
-        if ($kosan->foto_kosan && Storage::exists('public/foto_kosan/' . $kosan->foto_kosan)) {
-            Storage::delete('public/foto_kosan/' . $kosan->foto_kosan);
+        if ($kosan->foto_kosan && Storage::disk('public')->exists($kosan->foto_kosan)) {
+            Storage::disk('public')->delete($kosan->foto_kosan);
         }
 
         $kosan->delete();
 
-        return redirect()->route('pemilik.kosan.index')->with('success', 'Data kosan berhasil dihapus!');
+        return redirect()->back()->with('success', 'Data kosan berhasil dihapus!');
     }
 
-    // Tampilkan kosan untuk verifikasi (status pending)
+    // ================================
+    // Verifikasi pemilik (lihat status)
+    // ================================
     public function verifikasiIndex()
     {
-        $kosans = DaftarKos::where('user_id', auth()->id())
-                            ->where('status_verifikasi', 'pending')
-                            ->latest()
-                            ->get();
-
+        $kosans = DaftarKos::where('user_id', auth()->id())->latest()->get();
         return view('pemilik.kosan.verifikasi', compact('kosans'));
     }
 
-    // Update status verifikasi
+    // ================================
+    // Update status verifikasi (Admin)
+    // ================================
     public function verifikasi(Request $request, $id)
     {
-        $kosan = DaftarKos::where('user_id', auth()->id())->findOrFail($id);
-        $kosan->status_verifikasi = $request->input('status'); // approved / rejected
+        $request->validate([
+            'status_verifikasi' => 'required|in:approved,rejected',
+        ]);
+
+        $kosan = DaftarKos::findOrFail($id);
+        $kosan->status_verifikasi = $request->input('status_verifikasi');
         $kosan->save();
 
-        return redirect()->route('pemilik.kosan.verifikasi')
-                         ->with('success', 'Status kosan berhasil diperbarui.');
+        // Jika disetujui, copy ke tabel KosApproved
+        if ($kosan->status_verifikasi === 'approved') {
+            KosApproved::create([
+                'user_id' => $kosan->user_id,
+                'nama_kosan' => $kosan->nama_kosan,
+                'harga_sewa' => $kosan->harga_sewa,
+                'jumlah_kamar' => $kosan->jumlah_kamar,
+                'no_hp' => $kosan->no_hp,
+                'fasilitas' => $kosan->fasilitas,
+                'luas_tanah' => $kosan->luas_tanah,
+                'jarak_ke_kampus' => $kosan->jarak_ke_kampus,
+                'alamat_kosan' => $kosan->alamat_kosan,
+                'foto_kosan' => $kosan->foto_kosan,
+            ]);
+        }
+
+        return redirect()->back()->with('success', 'Status kosan berhasil diperbarui.');
     }
 }
