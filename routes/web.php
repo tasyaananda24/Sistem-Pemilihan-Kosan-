@@ -78,12 +78,12 @@ Route::post('/admin/kos/{id}/reject', [KosController::class, 'reject'])->name('a
 
 
 Route::prefix('admin')->name('admin.')->group(function(){
-    Route::resource('kriteria', \App\Http\Controllers\Admin\KriteriaController::class);
-});
+    Route::resource('kriteria', \App\Http\Controllers\Admin\KriteriaController::class)
+         ->parameters(['kriteria' => 'kriteria']);
 
-Route::prefix('admin')->name('admin.')->group(function(){
     Route::get('penilaian/create', [\App\Http\Controllers\Admin\PenilaianController::class,'create'])->name('penilaian.create');
     Route::post('penilaian/store', [\App\Http\Controllers\Admin\PenilaianController::class,'store'])->name('penilaian.store');
 });
+
 
 
