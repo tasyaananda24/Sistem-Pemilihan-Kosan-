@@ -3,8 +3,9 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\SawController;
+use App\Http\Controllers\KosanController;
 use App\Http\Controllers\KosController;
-use App\Http\Controllers\c_pendaftaran;
+use App\Http\Controllers\PemilikController;
 
 /*
 |--------------------------------------------------------------------------
@@ -20,70 +21,65 @@ Route::get('/', function () {
 | Auth Routes
 |--------------------------------------------------------------------------
 */
-Route::get('login', [AuthController::class, 'showLogin'])->name('login');
-Route::post('login', [AuthController::class, 'login'])->name('login.post');
+Route::controller(AuthController::class)->group(function () {
+    Route::get('login', 'showLogin')->name('login');
+    Route::post('login', 'login')->name('login.post');
 
-Route::get('register', [AuthController::class, 'showRegister'])->name('register');
-Route::post('register', [AuthController::class, 'register'])->name('register.post');
+    Route::get('register', 'showRegister')->name('register');
+    Route::post('register', 'register')->name('register.post');
 
-Route::post('logout', [AuthController::class, 'logout'])->name('logout');
+    Route::post('logout', 'logout')->name('logout');
+});
 
 /*
 |--------------------------------------------------------------------------
-| Dashboard Admin (sementara tanpa middleware)
+| Dashboard Admin
 |--------------------------------------------------------------------------
 */
-Route::get('/admin/dashboard', function () {
-    return view('admin.dashboard'); // pastikan view admin.dashboard ada
-})->name('admin.dashboard');
+Route::prefix('admin')->name('admin.')->group(function () {
+    Route::get('dashboard', function () {
+        return view('admin.dashboard');
+    })->name('dashboard');
+
+    // Halaman SPK
+    Route::get('spk', [SawController::class, 'index'])->name('spk.index');
+
+    // Verifikasi Kos (Admin)
+    Route::controller(KosController::class)->group(function () {
+        Route::get('kos/verifikasi', 'verifikasi')->name('kos.verifikasi');
+        Route::post('kos/{id}/approve', 'approve')->name('kos.approve');
+        Route::post('kos/{id}/reject', 'reject')->name('kos.reject');
+    });
+
+    // Kriteria & Penilaian (SPK)
+    Route::resource('kriteria', \App\Http\Controllers\Admin\KriteriaController::class);
+    Route::get('penilaian/create', [\App\Http\Controllers\Admin\PenilaianController::class, 'create'])->name('penilaian.create');
+    Route::post('penilaian/store', [\App\Http\Controllers\Admin\PenilaianController::class, 'store'])->name('penilaian.store');
+});
 
 /*
 |--------------------------------------------------------------------------
-| Dashboard & Menu Pemilik (sementara tanpa middleware)
+| Dashboard & Menu Pemilik
 |--------------------------------------------------------------------------
 */
-Route::prefix('pemilik')->group(function () {
-    // Dashboard utama
-    Route::get('/dashboard', function () {
-        return view('pemilik.dashboard'); // pastikan view pemilik.dashboard ada
-    })->name('pemilik.dashboard');
+Route::prefix('pemilik')->name('pemilik.')->group(function () {
 
-    // Status Pendaftaran (tabel data)
-    Route::get('/status-pendaftaran', [c_pendaftaran::class, 'status'])
-        ->name('pemilik.statuspendaftaran');
+    // Dashboard utama pemilik
+    Route::get('dashboard', [PemilikController::class, 'dashboard'])->name('dashboard');
 
-    // Form Pendaftaran (tambah kosan)
-    Route::get('/pendaftaran/create', [c_pendaftaran::class, 'create'])
-        ->name('pendaftaran.create');
-    Route::post('/pendaftaran', [c_pendaftaran::class, 'store'])
-        ->name('pendaftaran.store');
-
-    // (opsional) hapus data
-    Route::delete('/pendaftaran/{id}', [c_pendaftaran::class, 'destroy'])
-        ->name('pendaftaran.destroy');
+    /*
+    |--------------------------------------------------------------------------
+    | CRUD Kosan (Pemilik)
+    |--------------------------------------------------------------------------
+    */
+    Route::controller(KosanController::class)->group(function () {
+        Route::get('kosan', 'index')->name('kosan.index');
+        Route::get('kosan/create', 'create')->name('kosan.create');
+        Route::post('kosan', 'store')->name('kosan.store');
+        Route::get('kosan/{id}/edit', 'edit')->name('kosan.edit');
+        Route::put('kosan/{id}', 'update')->name('kosan.update');
+        Route::delete('kosan/{id}', 'destroy')->name('kosan.destroy');
+        Route::get('kosan/verifikasi', 'verifikasiIndex')->name('kosan.verifikasi');
+        Route::patch('kosan/{id}/verifikasi', 'verifikasi')->name('kosan.verifikasi.update');
+    });
 });
-
-Route::get('/admin/spk', [App\Http\Controllers\SawController::class, 'index'])->name('admin.spk.index');
-
-
-// Route untuk pemilik kos
-Route::get('/kos', [KosController::class, 'index'])->name('kos.index');
-Route::get('/kos/create', [KosController::class, 'create'])->name('kos.create');
-Route::post('/kos', [KosController::class, 'store'])->name('kos.store');
-
-// Route untuk admin (verifikasi kos)
-Route::get('/admin/kos/verifikasi', [KosController::class, 'verifikasi'])->name('admin.kos.verifikasi');
-Route::post('/admin/kos/{id}/approve', [KosController::class, 'approve'])->name('admin.kos.approve');
-Route::post('/admin/kos/{id}/reject', [KosController::class, 'reject'])->name('admin.kos.reject');
-
-
-Route::prefix('admin')->name('admin.')->group(function(){
-    Route::resource('kriteria', \App\Http\Controllers\Admin\KriteriaController::class)
-         ->parameters(['kriteria' => 'kriteria']);
-
-    Route::get('penilaian/create', [\App\Http\Controllers\Admin\PenilaianController::class,'create'])->name('penilaian.create');
-    Route::post('penilaian/store', [\App\Http\Controllers\Admin\PenilaianController::class,'store'])->name('penilaian.store');
-});
-
-
-
