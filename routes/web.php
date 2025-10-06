@@ -2,45 +2,84 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\SawController;
 use App\Http\Controllers\KosanController;
+use App\Http\Controllers\KosController;
+use App\Http\Controllers\PemilikController;
 
-// Halaman utama
+/*
+|--------------------------------------------------------------------------
+| Halaman Utama
+|--------------------------------------------------------------------------
+*/
 Route::get('/', function () {
     return view('welcome');
 })->name('home');
 
-// Auth Routes
-Route::get('login', [AuthController::class, 'showLogin'])->name('login');
-Route::post('login', [AuthController::class, 'login'])->name('login.post');
+/*
+|--------------------------------------------------------------------------
+| Auth Routes
+|--------------------------------------------------------------------------
+*/
+Route::controller(AuthController::class)->group(function () {
+    Route::get('login', 'showLogin')->name('login');
+    Route::post('login', 'login')->name('login.post');
 
-Route::get('register', [AuthController::class, 'showRegister'])->name('register');
-Route::post('register', [AuthController::class, 'register'])->name('register.post');
+    Route::get('register', 'showRegister')->name('register');
+    Route::post('register', 'register')->name('register.post');
 
-Route::post('logout', [AuthController::class, 'logout'])->name('logout');
+    Route::post('logout', 'logout')->name('logout');
+});
 
-// Dashboard Admin
-Route::get('/admin/dashboard', function () {
-    return view('admin.dashboard'); // pastikan view ini ada
-})->name('admin.dashboard');
+/*
+|--------------------------------------------------------------------------
+| Dashboard Admin
+|--------------------------------------------------------------------------
+*/
+Route::prefix('admin')->name('admin.')->group(function () {
+    Route::get('dashboard', function () {
+        return view('admin.dashboard');
+    })->name('dashboard');
 
-// Dashboard Pemilik
-Route::get('/pemilik/dashboard', function () {
-    return view('pemilik.dashboard'); // pastikan view ini ada
-})->name('pemilik.dashboard');
+    // Halaman SPK
+    Route::get('spk', [SawController::class, 'index'])->name('spk.index');
 
-// // ✅ Route untuk CRUD Kosan (pemilik)
-Route::prefix('pemilik')->group(function () {
-    Route::get('kosan', [KosanController::class, 'index'])->name('kosan.index');   // tabel kosan
-    Route::get('kosan/create', [KosanController::class, 'create'])->name('kosan.create'); // form tambah
-    Route::post('kosan', [KosanController::class, 'store'])->name('kosan.store'); // simpan kosan
-    Route::get('kosan/{id}/edit', [KosanController::class, 'edit'])->name('kosan.edit');  // edit kosan
-    Route::put('kosan/{id}', [KosanController::class, 'update'])->name('kosan.update');  // update kosan
-    Route::delete('kosan/{id}', [KosanController::class, 'destroy'])->name('kosan.destroy'); // hapus kosan
+    // Verifikasi Kos (Admin)
+    Route::controller(KosController::class)->group(function () {
+        Route::get('kos/verifikasi', 'verifikasi')->name('kos.verifikasi');
+        Route::post('kos/{id}/approve', 'approve')->name('kos.approve');
+        Route::post('kos/{id}/reject', 'reject')->name('kos.reject');
+    });
 
-    // ✅ Tambahan: Verifikasi Kosan
-    Route::get('kosan/verifikasi', [KosanController::class, 'verifikasiIndex'])->name('kosan.verifikasi'); 
-    // menampilkan daftar kosan yang menunggu verifikasi
+    // Kriteria & Penilaian (SPK)
+    Route::resource('kriteria', \App\Http\Controllers\Admin\KriteriaController::class);
+    Route::get('penilaian/create', [\App\Http\Controllers\Admin\PenilaianController::class, 'create'])->name('penilaian.create');
+    Route::post('penilaian/store', [\App\Http\Controllers\Admin\PenilaianController::class, 'store'])->name('penilaian.store');
+});
 
-    Route::patch('kosan/{id}/verifikasi', [KosanController::class, 'verifikasi'])->name('kosan.verifikasi.update');
-    // melakukan verifikasi kosan tertentu
+/*
+|--------------------------------------------------------------------------
+| Dashboard & Menu Pemilik
+|--------------------------------------------------------------------------
+*/
+Route::prefix('pemilik')->name('pemilik.')->group(function () {
+
+    // Dashboard utama pemilik
+    Route::get('dashboard', [PemilikController::class, 'dashboard'])->name('dashboard');
+
+    /*
+    |--------------------------------------------------------------------------
+    | CRUD Kosan (Pemilik)
+    |--------------------------------------------------------------------------
+    */
+    Route::controller(KosanController::class)->group(function () {
+        Route::get('kosan', 'index')->name('kosan.index');
+        Route::get('kosan/create', 'create')->name('kosan.create');
+        Route::post('kosan', 'store')->name('kosan.store');
+        Route::get('kosan/{id}/edit', 'edit')->name('kosan.edit');
+        Route::put('kosan/{id}', 'update')->name('kosan.update');
+        Route::delete('kosan/{id}', 'destroy')->name('kosan.destroy');
+        Route::get('kosan/verifikasi', 'verifikasiIndex')->name('kosan.verifikasi');
+        Route::patch('kosan/{id}/verifikasi', 'verifikasi')->name('kosan.verifikasi.update');
+    });
 });

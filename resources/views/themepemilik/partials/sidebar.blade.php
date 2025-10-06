@@ -1,4 +1,5 @@
-<ul class="navbar-nav bg-gradient-primary sidebar sidebar-dark accordion" id="accordionSidebar">
+{{-- resources/views/themeadmin/sidebar.blade.php --}}
+<ul class="navbar-nav sidebar sidebar-dark accordion bg-gradient-primary" id="accordionSidebar">
 
     <!-- Sidebar - Brand -->
     <a class="sidebar-brand d-flex align-items-center justify-content-center" href="{{ url('/pemilik/dashboard') }}">
@@ -36,15 +37,15 @@
             aria-labelledby="headingManajemenKos" data-parent="#accordionSidebar">
             <div class="bg-white py-2 collapse-inner rounded">
                 <!-- Tabel daftar kosan (index) -->
-                <a class="collapse-item {{ request()->is('pemilik/kosan') ? 'active' : '' }}" href="{{ route('kosan.index') }}">
+                <a class="collapse-item {{ request()->is('pemilik/kosan') ? 'active' : '' }}" href="{{ route('pemilik.kosan.index') }}">
                     <i class="fas fa-fw fa-list"></i> Kosan Terdaftar
                 </a>
                 <!-- Form tambah kosan (create) -->
-                <a class="collapse-item {{ request()->is('pemilik/kosan/create') ? 'active' : '' }}" href="{{ route('kosan.create') }}">
+                <a class="collapse-item {{ request()->is('pemilik/kosan/create') ? 'active' : '' }}" href="{{ route('pemilik.kosan.create') }}">
                     <i class="fas fa-fw fa-plus-circle"></i> Daftarkan Kosan
                 </a>
                 <!-- Verifikasi Kosan -->
-                <a class="collapse-item {{ request()->is('pemilik/kosan/verifikasi*') ? 'active' : '' }}" href="{{ route('kosan.verifikasi') }}">
+                <a class="collapse-item {{ request()->is('pemilik/kosan/verifikasi*') ? 'active' : '' }}" href="{{ route('pemilik.kosan.verifikasi') }}">
                     <i class="fas fa-fw fa-check-circle"></i> Verifikasi Kosan
                 </a>
             </div>

@@ -2,99 +2,99 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Kosan;
 use Illuminate\Http\Request;
+use App\Models\DaftarKos;
+use Illuminate\Support\Facades\Storage;
 
 class KosanController extends Controller
 {
-    /**
-     * Tampilkan tabel daftar kosan
-     */
+    // Menampilkan semua kosan milik user yang login
     public function index()
     {
-        $kosans = Kosan::latest()->get();
+        $kosans = DaftarKos::where('user_id', auth()->id())->latest()->get();
         return view('pemilik.kosan.index', compact('kosans'));
     }
 
-    /**
-     * Tampilkan form tambah kosan
-     */
+    // Form tambah kosan baru
     public function create()
     {
         return view('pemilik.kosan.create');
     }
 
-    /**
-     * Simpan data kosan baru
-     */
+    // Simpan data kosan baru
     public function store(Request $request)
     {
         $request->validate([
-            'nama_kosan'   => 'required|string|max:255',
-            'alamat'       => 'required|string',
-            'harga'        => 'required|numeric',
-            'fasilitas'    => 'nullable|string',
-            'nama_pemilik' => 'required|string|max:255',
-            'hubungi'      => 'required|string|max:20',
+            'nama_kosan' => 'required|string|max:255',
+            'harga_sewa' => 'required|numeric',
+            'jumlah_kamar' => 'required|integer',
+            'no_hp' => 'required|string|max:20',
+            'fasilitas' => 'nullable|string',
+            'luas_tanah' => 'nullable|string',
+            'jarak_ke_kampus' => 'nullable|string',
+            'alamat_kosan' => 'required|string|max:255',
+            'foto_kosan' => 'nullable|image|mimes:jpg,jpeg,png|max:2048',
         ]);
 
-        Kosan::create([
-            'nama_kosan'   => $request->nama_kosan,
-            'alamat'       => $request->alamat,
-            'harga'        => $request->harga,
-            'fasilitas'    => $request->fasilitas,
-            'nama_pemilik' => $request->nama_pemilik,
-            'hubungi'      => $request->hubungi,
+        // Upload foto jika ada
+       $fotoPath = null;
+if ($request->hasFile('foto_kosan')) {
+    $fotoPath = $request->file('foto_kosan')->store('foto_kosan', 'public');
+    // simpan $fotoPath langsung, contoh: foto_kosan/file.jpg
+}
+
+
+        DaftarKos::create([
+            'user_id' => auth()->id(),
+            'nama_kosan' => $request->nama_kosan,
+            'harga_sewa' => $request->harga_sewa,
+            'jumlah_kamar' => $request->jumlah_kamar,
+            'no_hp' => $request->no_hp,
+            'fasilitas' => $request->fasilitas,
+            'luas_tanah' => $request->luas_tanah,
+            'jarak_ke_kampus' => $request->jarak_ke_kampus,
+            'alamat_kosan' => $request->alamat_kosan,
+            'foto_kosan' => $fotoPath,
+            'status_verifikasi' => 'pending', // default status
         ]);
 
-        return redirect()->route('kosan.index')->with('success', 'Kosan berhasil ditambahkan.');
+        return redirect()->route('pemilik.kosan.index')
+                         ->with('success', 'Data kos berhasil ditambahkan.');
     }
 
-    /**
-     * Tampilkan form edit kosan
-     */
-    public function edit($id)
-    {
-        $kosan = Kosan::findOrFail($id);
-        return view('pemilik.kosan.edit', compact('kosan'));
-    }
-
-    /**
-     * Update data kosan
-     */
-    public function update(Request $request, $id)
-    {
-        $request->validate([
-            'nama_kosan'   => 'required|string|max:255',
-            'alamat'       => 'required|string',
-            'harga'        => 'required|numeric',
-            'fasilitas'    => 'nullable|string',
-            'nama_pemilik' => 'required|string|max:255',
-            'hubungi'      => 'required|string|max:20',
-        ]);
-
-        $kosan = Kosan::findOrFail($id);
-
-        $kosan->update([
-            'nama_kosan'   => $request->nama_kosan,
-            'alamat'       => $request->alamat,
-            'harga'        => $request->harga,
-            'fasilitas'    => $request->fasilitas,
-            'nama_pemilik' => $request->nama_pemilik,
-            'hubungi'      => $request->hubungi,
-        ]);
-
-        return redirect()->route('kosan.index')->with('success', 'Data kosan berhasil diperbarui.');
-    }
-
-    /**
-     * Hapus kosan
-     */
+    // Hapus kosan
     public function destroy($id)
     {
-        $kosan = Kosan::findOrFail($id);
+        $kosan = DaftarKos::where('user_id', auth()->id())->findOrFail($id);
+
+        if ($kosan->foto_kosan && Storage::exists('public/foto_kosan/' . $kosan->foto_kosan)) {
+            Storage::delete('public/foto_kosan/' . $kosan->foto_kosan);
+        }
+
         $kosan->delete();
 
-        return redirect()->route('kosan.index')->with('success', 'Kosan berhasil dihapus.');
+        return redirect()->route('pemilik.kosan.index')->with('success', 'Data kosan berhasil dihapus!');
+    }
+
+    // Tampilkan kosan untuk verifikasi (status pending)
+    public function verifikasiIndex()
+    {
+        $kosans = DaftarKos::where('user_id', auth()->id())
+                            ->where('status_verifikasi', 'pending')
+                            ->latest()
+                            ->get();
+
+        return view('pemilik.kosan.verifikasi', compact('kosans'));
+    }
+
+    // Update status verifikasi
+    public function verifikasi(Request $request, $id)
+    {
+        $kosan = DaftarKos::where('user_id', auth()->id())->findOrFail($id);
+        $kosan->status_verifikasi = $request->input('status'); // approved / rejected
+        $kosan->save();
+
+        return redirect()->route('pemilik.kosan.verifikasi')
+                         ->with('success', 'Status kosan berhasil diperbarui.');
     }
 }
