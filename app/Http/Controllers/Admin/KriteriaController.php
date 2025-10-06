@@ -15,7 +15,9 @@ class KriteriaController extends Controller
 
     public function create() {
         return view('admin.v_addkriteria');
-    }
+    } 
+
+    // NOTE: update bobot disesuaikan persen
 
     public function store(Request $request) {
         $request->validate([

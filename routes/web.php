@@ -32,9 +32,9 @@ Route::controller(AuthController::class)->group(function () {
 });
 
 /*
-|--------------------------------------------------------------------------
+|-------------------------------------------------------------------------- 
 | Dashboard Admin
-|--------------------------------------------------------------------------
+|-------------------------------------------------------------------------- 
 */
 Route::prefix('admin')->name('admin.')->group(function () {
     Route::get('dashboard', function () {
@@ -52,10 +52,13 @@ Route::prefix('admin')->name('admin.')->group(function () {
     });
 
     // Kriteria & Penilaian (SPK)
-    Route::resource('kriteria', \App\Http\Controllers\Admin\KriteriaController::class);
+    Route::resource('kriteria', \App\Http\Controllers\Admin\KriteriaController::class)
+         ->parameters(['kriteria' => 'kriteria']);
+
     Route::get('penilaian/create', [\App\Http\Controllers\Admin\PenilaianController::class, 'create'])->name('penilaian.create');
     Route::post('penilaian/store', [\App\Http\Controllers\Admin\PenilaianController::class, 'store'])->name('penilaian.store');
 });
+
 
 /*
 |--------------------------------------------------------------------------

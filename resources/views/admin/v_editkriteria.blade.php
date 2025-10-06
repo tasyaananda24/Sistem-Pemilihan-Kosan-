@@ -68,10 +68,46 @@
 
             <!-- Tombol -->
             <div class="d-flex mt-4">
-                <a href="{{ route('admin.kriteria.index') }}" class="btn btn-secondary">Kembali</a>
-                <button type="submit" class="btn ms-3" style="background-color:#8B4513; color:white;">Simpan</button>
+                <a href="{{ route('admin.kriteria.index') }}" class="btn btn-custom-green">Kembali</a>
+                <button type="submit" class="btn btn-custom-brown ms-3">Simpan</button>
             </div>
         </form>
     </div>
 </div>
 @endsection
+
+@push('styles')
+<style>
+    /* Tombol Hijau untuk Kembali */
+    .btn-custom-green {
+        background-color: #A3B18A;
+        color: #FFFBF2;
+        border-radius: 25px;
+        padding: 8px 20px;
+        font-weight: 500;
+        border: 1px solid #A3B18A;
+        transition: 0.3s;
+    }
+    .btn-custom-green:hover {
+        background-color: #7c8c66;
+        color: #FFFBF2;
+        border: 1px solid #7c8c66;
+    }
+
+    /* Tombol Coklat untuk Simpan/Edit */
+    .btn-custom-brown {
+        background-color: #8B4513;
+        color: #FFFBF2;
+        border-radius: 25px;
+        padding: 8px 20px;
+        font-weight: 500;
+        border: 1px solid #8B4513;
+        transition: 0.3s;
+    }
+    .btn-custom-brown:hover {
+        background-color: #7C3E1D;
+        color: #FFFBF2;
+        border: 1px solid #7C3E1D;
+    }
+</style>
+@endpush

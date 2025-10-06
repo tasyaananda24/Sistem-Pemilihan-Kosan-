@@ -5,7 +5,7 @@
 @section('content')
 <div class="d-sm-flex align-items-center justify-content-between mb-4">
     <h1 class="h3 mb-0 text-gray-800">Daftar Kriteria</h1>
-    <a href="{{ route('admin.kriteria.create') }}" class="btn" style="background-color:#8B4513; color:white;">
+    <a href="{{ route('admin.kriteria.create') }}" class="btn btn-custom-green">
         Tambah Kriteria
     </a>
 </div>
@@ -33,14 +33,13 @@
                         <td class="text-center">{{ number_format($k->bobot * 100, 2) }}%</td>
                         <td class="text-center">{{ ucfirst($k->atribut) }}</td>
                         <td class="text-center">
-                            <a href="{{ route('admin.kriteria.edit',$k->id) }}" 
-                               class="btn" style="background-color:#8B4513; color:white;">
+                            <a href="{{ route('admin.kriteria.edit',$k->id) }}" class="btn btn-custom-brown">
                                 Edit
                             </a>
                             <form action="{{ route('admin.kriteria.destroy',$k->id) }}" method="POST" style="display:inline" class="form-hapus">
                                 @csrf
                                 @method('DELETE')
-                                <button type="submit" class="btn" style="background-color:#dc3545; color:white;">
+                                <button type="submit" class="btn btn-custom-red">
                                     Hapus
                                 </button>
                             </form>
@@ -58,14 +57,64 @@
 </div>
 @endsection
 
+@push('styles')
+<style>
+    /* Tombol Hijau untuk Tambah */
+    .btn-custom-green {
+        background-color: #A3B18A;
+        color: #FFFBF2;
+        border-radius: 25px;
+        padding: 8px 20px;
+        font-weight: 500;
+        border: 1px solid #A3B18A;
+        transition: 0.3s;
+    }
+    .btn-custom-green:hover {
+        background-color: #7c8c66;
+        color: #FFFBF2;
+        border: 1px solid #7c8c66;
+    }
+
+    /* Tombol Coklat untuk Edit */
+    .btn-custom-brown {
+        background-color: #8B4513;
+        color: #FFFBF2;
+        border-radius: 25px;
+        padding: 8px 20px;
+        font-weight: 500;
+        border: 1px solid #8B4513;
+        transition: 0.3s;
+    }
+    .btn-custom-brown:hover {
+        background-color: #7C3E1D;
+        color: #FFFBF2;
+        border: 1px solid #7C3E1D;
+    }
+
+    /* Tombol Merah untuk Hapus */
+    .btn-custom-red {
+        background-color: #dc3545;
+        color: #FFFBF2;
+        border-radius: 25px;
+        padding: 8px 20px;
+        font-weight: 500;
+        border: 1px solid #dc3545;
+        transition: 0.3s;
+    }
+    .btn-custom-red:hover {
+        background-color: #c82333;
+        color: #FFFBF2;
+        border: 1px solid #c82333;
+    }
+</style>
+@endpush
+
 @push('scripts')
-<!-- Tambahkan SweetAlert2 -->
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script>
-    // Handle semua form hapus
     document.querySelectorAll('.form-hapus').forEach(form => {
         form.addEventListener('submit', function(e) {
-            e.preventDefault(); // stop submit
+            e.preventDefault();
 
             Swal.fire({
                 title: 'Yakin hapus?',
@@ -78,7 +127,7 @@
                 cancelButtonText: 'Batal'
             }).then((result) => {
                 if (result.isConfirmed) {
-                    form.submit(); // submit kalau OK
+                    form.submit();
                 }
             });
         });
