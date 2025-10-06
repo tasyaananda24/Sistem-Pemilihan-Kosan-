@@ -19,13 +19,29 @@ class KriteriaController extends Controller
 
     public function store(Request $request) {
         $request->validate([
-            'nama_kriteria'=>'required|string',
-            'bobot'=>'required|numeric',
-            'atribut'=>'required|in:cost,benefit',
+            'kode' => 'required|string|unique:kriteria,kode',
+            'nama_kriteria' => 'required|string',
+            'bobot' => 'required|numeric',
+            'atribut' => 'required|in:cost,benefit',
+        ], [
+            'kode.required' => 'Kode kriteria wajib diisi.',
+            'kode.unique' => 'Kode kriteria sudah digunakan.',
+            'nama_kriteria.required' => 'Nama kriteria wajib diisi.',
+            'bobot.required' => 'Bobot wajib diisi.',
+            'bobot.numeric' => 'Bobot harus berupa angka (contoh: 20 atau 0.2).',
+            'atribut.required' => 'Atribut wajib dipilih.',
         ]);
 
-        Kriteria::create($request->all());
-        return redirect()->route('admin.kriteria.index')->with('success','Kriteria berhasil ditambah.');
+        $data = $request->all();
+
+        // jika bobot > 1 berarti diinput persen → ubah ke desimal
+        if ($data['bobot'] > 1) {
+            $data['bobot'] = $data['bobot'] / 100;
+        }
+
+        Kriteria::create($data);
+
+        return redirect()->route('admin.kriteria.index')->with('success', 'Kriteria berhasil ditambah.');
     }
 
     public function edit(Kriteria $kriteria) {
@@ -34,17 +50,32 @@ class KriteriaController extends Controller
 
     public function update(Request $request, Kriteria $kriteria) {
         $request->validate([
-            'nama_kriteria'=>'required|string',
-            'bobot'=>'required|numeric',
-            'atribut'=>'required|in:cost,benefit',
+            'kode' => 'required|string|unique:kriteria,kode,' . $kriteria->id,
+            'nama_kriteria' => 'required|string',
+            'bobot' => 'required|numeric',
+            'atribut' => 'required|in:cost,benefit',
+        ], [
+            'kode.required' => 'Kode kriteria wajib diisi.',
+            'kode.unique' => 'Kode kriteria sudah digunakan.',
+            'nama_kriteria.required' => 'Nama kriteria wajib diisi.',
+            'bobot.required' => 'Bobot wajib diisi.',
+            'bobot.numeric' => 'Bobot harus berupa angka (contoh: 20 atau 0.2).',
+            'atribut.required' => 'Atribut wajib dipilih.',
         ]);
 
-        $kriteria->update($request->all());
-        return redirect()->route('admin.kriteria.index')->with('success','Kriteria berhasil diupdate.');
+        $data = $request->all();
+
+        if ($data['bobot'] > 1) {
+            $data['bobot'] = $data['bobot'] / 100;
+        }
+
+        $kriteria->update($data);
+
+        return redirect()->route('admin.kriteria.index')->with('success', 'Kriteria berhasil diupdate.');
     }
 
     public function destroy(Kriteria $kriteria) {
         $kriteria->delete();
-        return redirect()->route('admin.kriteria.index')->with('success','Kriteria berhasil dihapus.');
+        return redirect()->route('admin.kriteria.index')->with('success', 'Kriteria berhasil dihapus.');
     }
 }

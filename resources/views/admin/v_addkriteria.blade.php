@@ -1,23 +1,77 @@
 @extends('themeadmin.default')
+
+@section('title', isset($kriteria) ? 'Edit Kriteria' : 'Tambah Kriteria')
+
 @section('content')
-<form action="{{ isset($kriteria)? route('admin.kriteria.update',$kriteria->id) : route('admin.kriteria.store') }}" method="POST">
-@csrf
-@if(isset($kriteria)) @method('PUT') @endif
-<div class="mb-3">
-<label>Nama Kriteria</label>
-<input type="text" name="nama_kriteria" class="form-control" value="{{ $kriteria->nama_kriteria ?? '' }}">
+<div class="d-sm-flex align-items-center justify-content-between mb-4">
+    <h1 class="h3 mb-0 text-gray-800">
+        {{ isset($kriteria) ? 'Edit Kriteria' : 'Tambah Kriteria' }}
+    </h1>
 </div>
-<div class="mb-3">
-<label>Bobot</label>
-<input type="number" step="0.01" name="bobot" class="form-control" value="{{ $kriteria->bobot ?? '' }}">
+
+<div class="card shadow mb-4">
+    <div class="card-body">
+        <form action="{{ isset($kriteria) ? route('admin.kriteria.update', $kriteria->id) : route('admin.kriteria.store') }}" method="POST">
+            @csrf
+            @if(isset($kriteria))
+                @method('PUT')
+            @endif
+
+            <!-- Input Kode -->
+            <div class="mb-3">
+                <label for="kode" class="form-label">Kode</label>
+                <input type="text" id="kode" name="kode" class="form-control"
+                       value="{{ old('kode', $kriteria->kode ?? '') }}" required>
+                @error('kode')
+                    <small class="text-danger">{{ $message }}</small>
+                @enderror
+            </div>
+
+            <!-- Input Nama Kriteria -->
+            <div class="mb-3">
+                <label for="nama_kriteria" class="form-label">Nama Kriteria</label>
+                <input type="text" id="nama_kriteria" name="nama_kriteria" class="form-control" 
+                       value="{{ old('nama_kriteria', $kriteria->nama_kriteria ?? '') }}" required>
+                @error('nama_kriteria')
+                    <small class="text-danger">{{ $message }}</small>
+                @enderror
+            </div>
+
+            <!-- Input Bobot dalam persen -->
+            <div class="mb-3">
+                <label for="bobot" class="form-label">Bobot (%)</label>
+                <div class="input-group">
+                    <input type="number" id="bobot" step="0.01" name="bobot" class="form-control" 
+                        value="{{ old('bobot', isset($kriteria) ? $kriteria->bobot * 100 : '') }}" required>
+                    <span class="input-group-text">%</span>
+                </div>
+                <small class="form-text text-muted">
+                    Masukkan bobot dalam persen. Contoh: <strong>20</strong> berarti <strong>20%</strong>.
+                </small>
+                @error('bobot')
+                    <small class="text-danger">{{ $message }}</small>
+                @enderror
+            </div>
+
+            <!-- Pilihan Atribut -->
+            <div class="mb-3">
+                <label for="atribut" class="form-label">Atribut</label>
+                <select id="atribut" name="atribut" class="form-control" required>
+                    <option value="">-- Pilih Atribut --</option>
+                    <option value="cost" {{ old('atribut', $kriteria->atribut ?? '') == 'cost' ? 'selected' : '' }}>Cost</option>
+                    <option value="benefit" {{ old('atribut', $kriteria->atribut ?? '') == 'benefit' ? 'selected' : '' }}>Benefit</option>
+                </select>
+                @error('atribut')
+                    <small class="text-danger">{{ $message }}</small>
+                @enderror
+            </div>
+
+            <!-- Tombol -->
+            <div class="d-flex mt-4">
+                <a href="{{ route('admin.kriteria.index') }}" class="btn btn-secondary">Kembali</a>
+                <button type="submit" class="btn ms-3" style="background-color:#8B4513; color:white;">Simpan</button>
+            </div>
+        </form>
+    </div>
 </div>
-<div class="mb-3">
-<label>Atribut</label>
-<select name="atribut" class="form-control">
-<option value="cost" {{ (isset($kriteria) && $kriteria->atribut=='cost')?'selected':'' }}>Cost</option>
-<option value="benefit" {{ (isset($kriteria) && $kriteria->atribut=='benefit')?'selected':'' }}>Benefit</option>
-</select>
-</div>
-<button type="submit" class="btn btn-success">Simpan</button>
-</form>
 @endsection
