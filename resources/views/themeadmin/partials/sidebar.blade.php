@@ -50,7 +50,7 @@
     </li>
 
     <!-- Verifikasi -->
-    <li class="nav-item {{ request()->is('admin/verifikasi*') ? 'active' : '' }}">
+    <li class="nav-item">
         <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseVerif"
            aria-expanded="true" aria-controls="collapseVerif">
             <i class="fas fa-fw fa-check-circle"></i>
@@ -67,7 +67,7 @@
     </li>
 
     <!-- Proses SPK -->
-    <li class="nav-item {{ request()->is('admin/matriks*') || request()->is('admin/bobot*') || request()->is('admin/perhitungan*') || request()->is('admin/ranking*') ? 'active' : '' }}">
+    <li class="nav-item">
         <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseSPK"
            aria-expanded="true" aria-controls="collapseSPK">
             <i class="fas fa-fw fa-cogs"></i>
@@ -93,7 +93,7 @@
     </li>
 
     <!-- Laporan -->
-    <li class="nav-item {{ request()->is('admin/laporan*') ? 'active' : '' }}">
+    <li class="nav-item">
         <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseLaporan"
            aria-expanded="true" aria-controls="collapseLaporan">
             <i class="fas fa-fw fa-file-alt"></i>
@@ -124,3 +124,18 @@
     </li>
 
 </ul>
+
+{{-- Style custom --}}
+<style>
+    /* Hanya highlight submenu aktif jadi coklat */
+    .sidebar .collapse-item.active {
+        background-color: #8B4513 !important; /* coklat */
+        color: #fff !important;
+        border-radius: .35rem;
+    }
+
+    /* Ikon dalam submenu aktif jadi putih */
+    .sidebar .collapse-item.active i {
+        color: #fff !important;
+    }
+</style>
