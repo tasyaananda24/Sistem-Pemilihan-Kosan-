@@ -36,9 +36,6 @@
         <div id="collapseMaster" class="collapse {{ request()->is('admin/kosan*') || request()->is('admin/kriteria*') || request()->is('admin/alternatif*') ? 'show' : '' }}"
              aria-labelledby="headingMaster" data-parent="#accordionSidebar">
             <div class="bg-white py-2 collapse-inner rounded">
-                <a class="collapse-item {{ request()->is('admin/kosan*') ? 'active' : '' }}" href="{{ url('/admin/kosan') }}">
-                    <i class="fas fa-fw fa-building mr-2"></i> Data Kosan
-                </a>
                 <a class="collapse-item {{ request()->is('admin/kriteria*') ? 'active' : '' }}" href="{{ url('/admin/kriteria') }}">
                     <i class="fas fa-fw fa-list-alt mr-2"></i> Kriteria
                 </a>

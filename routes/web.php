@@ -7,15 +7,17 @@ use App\Http\Controllers\KosanController;
 use App\Http\Controllers\KosController;
 use App\Http\Controllers\PemilikController;
 use App\Http\Controllers\Admin\KosanAdminController;
+use App\Http\Controllers\LandingController;
 
 /*
 |--------------------------------------------------------------------------
 | Halaman Utama
 |--------------------------------------------------------------------------
 */
-Route::get('/', function () {
-    return view('welcome');
-})->name('home');
+Route::get('/', [LandingController::class, 'index'])->name('home');
+
+Route::get('/kos/{id}', [KosanController::class, 'show'])->name('kos.detail');
+
 
 /*
 |--------------------------------------------------------------------------
