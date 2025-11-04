@@ -32,42 +32,46 @@ class KosanController extends Controller
     // ================================
     // Simpan kosan baru (status pending)
     // ================================
-    public function store(Request $request)
-    {
-        $request->validate([
-            'nama_kosan' => 'required|string|max:255',
-            'harga_sewa' => 'required|numeric',
-            'jumlah_kamar' => 'required|integer',
-            'no_hp' => 'required|string|max:20',
-            'fasilitas' => 'nullable|string',
-            'luas_tanah' => 'nullable|string',
-            'jarak_ke_kampus' => 'nullable|string',
-            'alamat_kosan' => 'required|string|max:255',
-            'foto_kosan' => 'nullable|image|mimes:jpg,jpeg,png|max:2048',
-        ]);
+   public function store(Request $request)
+{
+    $request->validate([
+        'nama_kosan' => 'required|string|max:255',
+        'harga_sewa' => 'required',
+        'jumlah_kamar' => 'required|integer',
+        'no_hp' => 'required|string|max:20',
+        'fasilitas' => 'nullable|string',
+        'luas_tanah' => 'nullable|string',
+        'jarak_ke_kampus' => 'nullable|string',
+        'alamat_kosan' => 'required|string|max:255',
+        'foto_kosan' => 'nullable|image|mimes:jpg,jpeg,png|max:2048',
+    ]);
 
-        $fotoPath = null;
-        if ($request->hasFile('foto_kosan')) {
-            $fotoPath = $request->file('foto_kosan')->store('foto_kosan', 'public');
-        }
+    // 🔹 Hapus titik dari input harga_sewa sebelum disimpan
+    $hargaSewa = str_replace('.', '', $request->harga_sewa);
 
-        DaftarKos::create([
-            'user_id' => auth()->id(),
-            'nama_kosan' => $request->nama_kosan,
-            'harga_sewa' => $request->harga_sewa,
-            'jumlah_kamar' => $request->jumlah_kamar,
-            'no_hp' => $request->no_hp,
-            'fasilitas' => $request->fasilitas,
-            'luas_tanah' => $request->luas_tanah,
-            'jarak_ke_kampus' => $request->jarak_ke_kampus,
-            'alamat_kosan' => $request->alamat_kosan,
-            'foto_kosan' => $fotoPath,
-            'status_verifikasi' => 'pending',
-        ]);
-
-        return redirect()->route('pemilik.kosan.verifikasi')
-                         ->with('success', 'Data kos berhasil ditambahkan. Menunggu verifikasi admin.');
+    $fotoPath = null;
+    if ($request->hasFile('foto_kosan')) {
+        $fotoPath = $request->file('foto_kosan')->store('foto_kosan', 'public');
     }
+
+    DaftarKos::create([
+        'user_id' => auth()->id(),
+        'nama_kosan' => $request->nama_kosan,
+        'harga_sewa' => $hargaSewa, // ← gunakan nilai bersih tanpa titik
+        'jumlah_kamar' => $request->jumlah_kamar,
+        'no_hp' => $request->no_hp,
+        'fasilitas' => $request->fasilitas,
+        'luas_tanah' => $request->luas_tanah,
+        'jarak_ke_kampus' => $request->jarak_ke_kampus,
+        'alamat_kosan' => $request->alamat_kosan,
+        'foto_kosan' => $fotoPath,
+        'status_verifikasi' => 'pending',
+    ]);
+
+    return redirect()->route('pemilik.kosan.verifikasi')
+                     ->with('success', 'Data kos berhasil ditambahkan. Menunggu verifikasi admin.');
+}
+
 
     // ================================
     // Hapus kosan

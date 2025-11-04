@@ -66,12 +66,7 @@
         </a>
     </li>
 
-    <li class="nav-item {{ request()->is('pemilik/pesan*') ? 'active' : '' }}">
-        <a class="nav-link" href="{{ url('/pemilik/pesan') }}">
-            <i class="fas fa-fw fa-envelope"></i>
-            <span>Pesan Masuk</span>
-        </a>
-    </li>
+  
 
     <hr class="sidebar-divider d-none d-md-block">
 

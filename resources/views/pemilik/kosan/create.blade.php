@@ -41,7 +41,15 @@
                         <label for="harga_sewa" class="form-label fw-semibold">Harga Sewa / Bulan</label>
                         <div class="input-group input-group-lg @error('harga_sewa') is-invalid @enderror">
                             <span class="input-group-text bg-light border-end-0 text-dark fw-bold">Rp</span>
-                            <input type="text" id="harga_sewa" name="harga_sewa" class="form-control border-start-0 @error('harga_sewa') is-invalid @enderror" placeholder="Contoh: 1.200.000" value="{{ old('harga_sewa') }}" required>
+                            <input 
+                                type="text" 
+                                id="harga_sewa" 
+                                name="harga_sewa" 
+                                class="form-control border-start-0 @error('harga_sewa') is-invalid @enderror" 
+                                placeholder="Contoh: 1.200.000" 
+                                value="{{ old('harga_sewa') }}" 
+                                required
+                                oninput="formatRupiah(this)">
                         </div>
                         @error('harga_sewa') <div class="invalid-feedback d-block">{{ $message }}</div> @enderror
                     </div>
@@ -134,4 +142,16 @@
         </div>
     </div>
 </div>
+
+{{-- 🟤 Script Format Rupiah --}}
+<script>
+function formatRupiah(input) {
+    let value = input.value.replace(/\D/g, ''); // Hapus semua karakter non-angka
+    if (value) {
+        input.value = value.replace(/\B(?=(\d{3})+(?!\d))/g, '.'); // Tambahkan titik setiap 3 digit
+    } else {
+        input.value = '';
+    }
+}
+</script>
 @endsection

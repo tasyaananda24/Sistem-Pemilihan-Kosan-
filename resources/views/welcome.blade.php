@@ -11,17 +11,16 @@
     /* Navbar */
     .navbar-custom {
       background-color: #7C3E1D;
-      height: 85px; /* lebih tipis biar mirip gambar kuning */
+      height: 85px;
       display: flex;
       justify-content: space-between;
       align-items: center;
       padding: 0 5%;
     }
 
-    /* Brand */
     .navbar-brand {
       font-family: 'Walibi0615', sans-serif;
-      font-size: 28px; /* agak kecil biar proporsional */
+      font-size: 28px;
       font-weight: bold;
       color: #FFFBF2 !important;
       display: flex;
@@ -34,7 +33,6 @@
       margin-right: 10px;
     }
 
-    /* Glassmorphism Button */
     .nav-btn {
         width: 140px;
         height: 45px;
@@ -44,10 +42,9 @@
         margin-left: 10px;
         font-weight: 500;
         color: #FFFBF2;
-        border: 1px solid rgba(255, 255, 255, 0.4); /* garis tipis */
-        background: rgba(255, 255, 255, 0.2);       /* transparan putih */
-        backdrop-filter: blur(10px);                /* efek kaca */
-        -webkit-backdrop-filter: blur(10px);        /* support Safari */
+        border: 1px solid rgba(255, 255, 255, 0.4);
+        background: rgba(255, 255, 255, 0.2);
+        backdrop-filter: blur(10px);
         display: flex;
         justify-content: center;
         align-items: center;
@@ -55,26 +52,23 @@
         text-align: center;
     }
 
-    /* Hover Effect */
     .nav-btn:hover {
-        background: #A3B18A; /* solid hijau */
+        background: #A3B18A;
         color: #FFFBF2;
         border: 1px solid #A3B18A;
     }
 
-    /* Active */
     .nav-btn.active {
-        background: #A3B18A; /* solid hijau */
+        background: #A3B18A;
         color: #FFFBF2 !important;
     }
 
     body {
-      background-color: #F5F5DC; /* cream */
+      background-color: #F5F5DC;
       font-family: 'SF Pro Display', sans-serif;
       color: #3F3F3F;
     }
 
-    /* Hero Image */
     .hero-section {
       position: relative;
       text-align: center;
@@ -87,11 +81,10 @@
       object-fit: cover;
     }
 
-    /* Box rekomendasi (melayang di tengah bawah hero image) */
     .rekomendasi-box {
       position: absolute;
       left: 50%;
-      bottom: -60px; /* atur tinggi sesuai kebutuhan */
+      bottom: -60px;
       transform: translateX(-50%);
       background: #FFFBF2;
       border-radius: 15px;
@@ -108,7 +101,6 @@
       color: #3F3F3F;
     }
 
-    /* Filter button */
     .filter-btn {
       background: #F5F5DC;
       border: none;
@@ -130,7 +122,6 @@
       background-color: #cfd4b3;
     }
 
-    /* Search box */
     .search-box {
       display: flex;
       align-items: center;
@@ -164,10 +155,9 @@
       background-color: #7c8c66;
     }
 
-    /* Section title di bawah */
     .section-title {
       text-align: center;
-      margin-top: 100px; /* biar tidak nabrak box */
+      margin-top: 100px;
     }
 
     .section-title h2 {
@@ -178,24 +168,32 @@
     .section-title p {
       color: #3F3F3F;
     }
+
+    .kos-card img {
+        height: 200px;
+        object-fit: cover;
+    }
   </style>
 </head>
 <body>
 
-    <!-- Navbar -->
-  <nav class="navbar-custom">
-    <a class="navbar-brand" href="#">
-      <img src="{{ asset('assets/material-symbols--home-work-rounded.svg') }}" alt="Logo Rumah"> 
-      KosFinder
-    </a>
+  <!-- Navbar -->
+<nav class="navbar-custom">
+  <a class="navbar-brand" href="{{ url('/') }}">
+    <img src="{{ asset('assets/material-symbols--home-work-rounded.svg') }}" alt="Logo Rumah"> 
+    KosFinder
+  </a>
 
-    <div class="d-flex flex-wrap justify-content-center">
-      <a href="#" class="nav-btn active">Beranda</a>
-      <a href="#" class="nav-btn">Kos Terbaru</a>
-      <a href="#" class="nav-btn">Tentang</a>
-      <a href="#" class="nav-btn">Login</a>
-    </div>
-  </nav>
+  <div class="d-flex flex-wrap justify-content-center">
+    <a href="{{ url('/') }}" class="nav-btn active">Beranda</a>
+    <a href="{{ url('/kos-terbaru') }}" class="nav-btn">Kos Terbaru</a>
+    <a href="{{ url('/tentang') }}" class="nav-btn">Tentang</a>
+    <a href="{{ route('login') }}" class="nav-btn">Login</a>
+  </div>
+</nav>
+
+
+
 
   <!-- Hero Section -->
   <section class="hero-section">
@@ -223,6 +221,29 @@
   <div class="section-title">
     <h2>Rekomendasi Kost</h2>
     <p>Temukan kost terbaik sesuai kebutuhan, budget, dan preferensi.</p>
+  </div>
+
+  <!-- Daftar Kosan -->
+  <div class="container mt-4">
+    <div class="row">
+      @foreach($koss as $kos)
+      <div class="col-md-4 mb-4">
+        <div class="card kos-card shadow-sm">
+        <img src="{{ asset('foto_kosan/' . $kos->foto_kosan) }}" class="card-img-top" alt="{{ $kos->nama_kosan }}">
+          <div class="card-body">
+            <h5 class="card-title">{{ $kos->nama_kosan }}</h5>
+            <p class="card-text">
+              Harga: Rp {{ number_format($kos->harga_sewa,0,',','.') }}<br>
+              Jarak ke kampus: {{ $kos->jarak_ke_kampus }}<br>
+              Luas: {{ $kos->luas_tanah }}<br>
+              Fasilitas: {{ $kos->fasilitas }}
+            </p>
+            <a href="#" class="btn btn-success btn-block">Detail</a>
+          </div>
+        </div>
+      </div>
+      @endforeach
+    </div>
   </div>
 
 </body>

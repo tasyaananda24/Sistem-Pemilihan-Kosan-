@@ -10,14 +10,22 @@ class KriteriaController extends Controller
 {
     public function index() {
         $kriteria = Kriteria::all();
-        return view('admin.v_kriteria', compact('kriteria'));
+        $totalBobot = $kriteria->sum('bobot');
+
+        return view('admin.v_kriteria', compact('kriteria', 'totalBobot'));
     }
 
     public function create() {
-        return view('admin.v_addkriteria');
-    } 
+        $totalBobot = Kriteria::sum('bobot');
 
-    // NOTE: update bobot disesuaikan persen
+        if ($totalBobot >= 1) {
+            return redirect()->route('admin.kriteria.index')
+                ->with('error', "Total bobot kriteria sudah 100% (" . ($totalBobot*100) . "%), tidak bisa menambah kriteria lagi.");
+        }
+
+        $sisaBobot = 1 - $totalBobot;
+        return view('admin.v_addkriteria', compact('sisaBobot'));
+    } 
 
     public function store(Request $request) {
         $request->validate([
@@ -36,9 +44,25 @@ class KriteriaController extends Controller
 
         $data = $request->all();
 
-        // jika bobot > 1 berarti diinput persen → ubah ke desimal
+        // ubah bobot ke desimal jika > 1 (misal 20%)
         if ($data['bobot'] > 1) {
             $data['bobot'] = $data['bobot'] / 100;
+        }
+
+        $totalBobot = Kriteria::sum('bobot');
+        $sisaBobot = 1 - $totalBobot;
+
+        // total sudah penuh
+        if ($totalBobot >= 1) {
+            return redirect()->route('admin.kriteria.index')
+                ->with('error', "Total bobot kriteria sudah 100% (" . ($totalBobot*100) . "%), tidak bisa menambah kriteria lagi.");
+        }
+
+        // bobot baru melebihi sisa
+        if ($totalBobot + $data['bobot'] > 1) {
+            return redirect()->back()
+                ->withInput()
+                ->with('error', "Bobot yang dimasukkan terlalu besar. Total bobot saat ini: " . ($totalBobot*100) . "%, sisa bobot yang bisa ditambahkan: " . ($sisaBobot*100) . "%.");
         }
 
         Kriteria::create($data);
@@ -47,7 +71,10 @@ class KriteriaController extends Controller
     }
 
     public function edit(Kriteria $kriteria) {
-        return view('admin.v_editkriteria', compact('kriteria'));
+        $totalBobot = Kriteria::where('id', '!=', $kriteria->id)->sum('bobot');
+        $sisaBobot = 1 - $totalBobot;
+
+        return view('admin.v_editkriteria', compact('kriteria', 'sisaBobot'));
     }
 
     public function update(Request $request, Kriteria $kriteria) {
@@ -69,6 +96,15 @@ class KriteriaController extends Controller
 
         if ($data['bobot'] > 1) {
             $data['bobot'] = $data['bobot'] / 100;
+        }
+
+        $totalBobot = Kriteria::where('id', '!=', $kriteria->id)->sum('bobot');
+        $sisaBobot = 1 - $totalBobot;
+
+        if ($totalBobot + $data['bobot'] > 1) {
+            return redirect()->back()
+                ->withInput()
+                ->with('error', "Bobot yang dimasukkan terlalu besar. Total bobot saat ini: " . ($totalBobot*100) . "%, sisa bobot yang bisa ditambahkan: " . ($sisaBobot*100) . "%.");
         }
 
         $kriteria->update($data);
