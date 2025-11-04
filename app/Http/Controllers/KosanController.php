@@ -130,4 +130,10 @@ class KosanController extends Controller
 
         return redirect()->back()->with('success', 'Status kosan berhasil diperbarui.');
     }
+
+    public function show($id)
+    {
+        $kos = DaftarKos::findOrFail($id);
+        return view('detail_kosan', compact('kos'));
+    }
 }

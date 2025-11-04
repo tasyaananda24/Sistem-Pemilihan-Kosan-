@@ -15,6 +15,12 @@ use App\Http\Controllers\LandingController;
 |--------------------------------------------------------------------------
 */
 Route::get('/', [LandingController::class, 'index'])->name('home');
+<<<<<<< HEAD
+=======
+
+Route::get('/kos/{id}', [KosanController::class, 'show'])->name('kos.detail');
+
+>>>>>>> d963be8544d52d9857398f83c3fa9353e4ca66c9
 
 /*
 |--------------------------------------------------------------------------
