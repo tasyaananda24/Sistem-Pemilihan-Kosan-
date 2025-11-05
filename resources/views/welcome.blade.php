@@ -14,12 +14,9 @@
     .navbar-custom {
       background-color: #7C3E1D;
       height: 85px;
-<<<<<<< HEAD
       display: flex;
       justify-content: space-between;
       align-items: center;
-=======
->>>>>>> d963be8544d52d9857398f83c3fa9353e4ca66c9
       padding: 0 5%;
       position: sticky;
       top: 0;
@@ -42,35 +39,6 @@
     }
 
     .nav-btn {
-<<<<<<< HEAD
-        width: 140px;
-        height: 45px;
-        font-family: 'SF Pro Display', sans-serif;
-        font-size: 15px;
-        border-radius: 25px;
-        margin-left: 10px;
-        font-weight: 500;
-        color: #FFFBF2;
-        border: 1px solid rgba(255, 255, 255, 0.4);
-        background: rgba(255, 255, 255, 0.2);
-        backdrop-filter: blur(10px);
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        transition: all 0.3s ease;
-        text-align: center;
-    }
-
-    .nav-btn:hover {
-        background: #A3B18A;
-        color: #FFFBF2;
-        border: 1px solid #A3B18A;
-    }
-
-    .nav-btn.active {
-        background: #A3B18A;
-        color: #FFFBF2 !important;
-=======
       width: 140px;
       height: 45px;
       font-family: 'SF Pro Display', sans-serif;
@@ -98,7 +66,6 @@
     .nav-btn.active {
       background: #A3B18A;
       color: #FFFBF2 !important;
->>>>>>> d963be8544d52d9857398f83c3fa9353e4ca66c9
     }
 
     body {
@@ -207,11 +174,6 @@
       color: #3F3F3F;
     }
 
-<<<<<<< HEAD
-    .kos-card img {
-        height: 200px;
-        object-fit: cover;
-=======
     /* Kartu kost */
     .kos-card {
       height: 100%;
@@ -258,52 +220,31 @@
         border-radius: 10px;
         padding: 10px;
       }
->>>>>>> d963be8544d52d9857398f83c3fa9353e4ca66c9
     }
   </style>
 </head>
 <body>
 
   <!-- Navbar -->
-<<<<<<< HEAD
-<nav class="navbar-custom">
-  <a class="navbar-brand" href="{{ url('/') }}">
-    <img src="{{ asset('assets/material-symbols--home-work-rounded.svg') }}" alt="Logo Rumah"> 
-    KosFinder
-  </a>
-
-  <div class="d-flex flex-wrap justify-content-center">
-    <a href="{{ url('/') }}" class="nav-btn active">Beranda</a>
-    <a href="{{ url('/kos-terbaru') }}" class="nav-btn">Kos Terbaru</a>
-    <a href="{{ url('/tentang') }}" class="nav-btn">Tentang</a>
-    <a href="{{ route('login') }}" class="nav-btn">Login</a>
-  </div>
-</nav>
-
-
-
-=======
   <nav class="navbar navbar-expand-lg navbar-custom">
-    <a class="navbar-brand" href="#">
+    <a class="navbar-brand" href="{{ url('/') }}">
       <img src="{{ asset('assets/material-symbols--home-work-rounded.svg') }}" alt="Logo Rumah"> 
       KosFinder
     </a>
 
-    <!-- Burger menu -->
     <button class="navbar-toggler text-white" type="button" data-toggle="collapse" data-target="#navbarNav">
       <span class="navbar-toggler-icon" style="filter: invert(100%);"></span>
     </button>
 
     <div class="collapse navbar-collapse justify-content-end" id="navbarNav">
       <div class="d-flex flex-wrap justify-content-center">
-        <a href="#" class="nav-btn active">Beranda</a>
-        <a href="#" class="nav-btn">Kos Terbaru</a>
-        <a href="#" class="nav-btn">Tentang</a>
-        <a href="#" class="nav-btn">Login</a>
+        <a href="{{ url('/') }}" class="nav-btn active">Beranda</a>
+        <a href="{{ url('/kos-terbaru') }}" class="nav-btn">Kos Terbaru</a>
+        <a href="{{ url('/tentang') }}" class="nav-btn">Tentang</a>
+        <a href="{{ route('login') }}" class="nav-btn">Login</a>
       </div>
     </div>
   </nav>
->>>>>>> d963be8544d52d9857398f83c3fa9353e4ca66c9
 
   <!-- Hero Section -->
   <section class="hero-section">
@@ -333,41 +274,70 @@
     <p>Temukan kost terbaik sesuai kebutuhan, budget, dan preferensi.</p>
   </div>
 
-  <!-- Daftar Kosan -->
-  <div class="container mt-4">
+ <!-- Daftar Kosan -->
+<div class="container mt-4">
     <div class="row">
-      @foreach($koss as $kos)
-<<<<<<< HEAD
-      <div class="col-md-4 mb-4">
-        <div class="card kos-card shadow-sm">
-        <img src="{{ asset('foto_kosan/' . $kos->foto_kosan) }}" class="card-img-top" alt="{{ $kos->nama_kosan }}">
-          <div class="card-body">
-            <h5 class="card-title">{{ $kos->nama_kosan }}</h5>
-            <p class="card-text">
-=======
-      <div class="col-md-4 mb-4 d-flex align-items-stretch">
-        <div class="card kos-card shadow-sm w-100">
-          <img src="{{ asset('storage/foto_kosan/' . $kos->foto_kosan) }}" class="card-img-top" alt="{{ $kos->nama_kosan }}">
-          <div class="card-body d-flex flex-column">
-            <h5 class="card-title">{{ $kos->nama_kosan }}</h5>
-            <p class="card-text flex-grow-1">
->>>>>>> d963be8544d52d9857398f83c3fa9353e4ca66c9
-              Harga: Rp {{ number_format($kos->harga_sewa,0,',','.') }}<br>
-              Jarak ke kampus: {{ $kos->jarak_ke_kampus }}<br>
-              Luas: {{ $kos->luas_tanah }}<br>
-              Fasilitas: {{ $kos->fasilitas }}
-            </p>
-<<<<<<< HEAD
-            <a href="#" class="btn btn-success btn-block">Detail</a>
-=======
-            <a href="{{ route('kos.detail', $kos->id) }}" class="btn btn-detail btn-block mt-auto">Detail</a>
->>>>>>> d963be8544d52d9857398f83c3fa9353e4ca66c9
+        @foreach($koss as $kos)
+        <div class="col-md-4 mb-4 d-flex align-items-stretch">
+            <div class="card kos-card shadow-sm w-100">
+                <img src="{{ $kos->foto_kosan && file_exists(public_path('assets/img/' . $kos->foto_kosan)) 
+                           ? asset('assets/img/' . $kos->foto_kosan) 
+                           : asset('assets/img/default-kosan.jpg') }}" 
+                     class="card-img-top" 
+                     alt="{{ $kos->nama_kosan }}">
+                <div class="card-body d-flex flex-column">
+                    <h5 class="card-title">{{ $kos->nama_kosan }}</h5>
+                    <p class="card-text flex-grow-1">
+                        Harga: Rp {{ number_format($kos->harga_sewa,0,',','.') }}<br>
+                        Jarak ke kampus: {{ $kos->jarak_ke_kampus }}<br>
+                        Luas: {{ $kos->luas_tanah }}<br>
+                        Fasilitas: {{ $kos->fasilitas }}
+                    </p>
+                    <!-- Tombol modal -->
+                    <a href="#" class="btn btn-detail btn-block mt-auto" data-toggle="modal" data-target="#detailModal{{ $kos->id }}">Detail</a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Modal Detail Kosan -->
+        <div class="modal fade" id="detailModal{{ $kos->id }}" tabindex="-1" aria-labelledby="detailModalLabel{{ $kos->id }}" aria-hidden="true">
+          <div class="modal-dialog modal-lg modal-dialog-centered">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h5 class="modal-title" id="detailModalLabel{{ $kos->id }}">{{ $kos->nama_kosan }}</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Tutup">
+                  <span aria-hidden="true">&times;</span>
+                </button>
+              </div>
+              <div class="modal-body">
+                <div class="row">
+                  <div class="col-md-6">
+                    <img src="{{ $kos->foto_kosan && file_exists(public_path('assets/img/' . $kos->foto_kosan)) 
+                                ? asset('assets/img/' . $kos->foto_kosan) 
+                                : asset('assets/img/default-kosan.jpg') }}" 
+                         class="img-fluid rounded" 
+                         alt="{{ $kos->nama_kosan }}">
+                  </div>
+                  <div class="col-md-6">
+                    <p><strong>Harga:</strong> Rp {{ number_format($kos->harga_sewa,0,',','.') }}</p>
+                    <p><strong>Luas Kamar:</strong> {{ $kos->luas_tanah }}</p>
+                    <p><strong>Jarak ke Kampus:</strong> {{ $kos->jarak_ke_kampus }}</p>
+                    <p><strong>Fasilitas:</strong> {{ $kos->fasilitas }}</p>
+                    <p><strong>Alamat:</strong> {{ $kos->alamat_kosan }}</p>
+                    <p><strong>Nomor Telepon:</strong> {{ $kos->no_hp }}</p>
+
+                  </div>
+                </div>
+              </div>
+              <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Tutup</button>
+              </div>
+            </div>
           </div>
         </div>
-      </div>
-      @endforeach
+        @endforeach
     </div>
-  </div>
+</div>
 
 </body>
 </html>

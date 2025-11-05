@@ -4,8 +4,8 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\SawController;
 use App\Http\Controllers\KosanController;
-use App\Http\Controllers\KosController;
 use App\Http\Controllers\PemilikController;
+use App\Http\Controllers\AdminController;
 use App\Http\Controllers\Admin\KosanAdminController;
 use App\Http\Controllers\LandingController;
 
@@ -15,12 +15,9 @@ use App\Http\Controllers\LandingController;
 |--------------------------------------------------------------------------
 */
 Route::get('/', [LandingController::class, 'index'])->name('home');
-<<<<<<< HEAD
-=======
 
+// 🔽 Route detail kosan untuk halaman depan
 Route::get('/kos/{id}', [KosanController::class, 'show'])->name('kos.detail');
-
->>>>>>> d963be8544d52d9857398f83c3fa9353e4ca66c9
 
 /*
 |--------------------------------------------------------------------------
@@ -38,16 +35,14 @@ Route::controller(AuthController::class)->group(function () {
 });
 
 /*
-|-------------------------------------------------------------------------- 
+|--------------------------------------------------------------------------
 | Dashboard Admin
-|-------------------------------------------------------------------------- 
+|--------------------------------------------------------------------------
 */
 Route::prefix('admin')->name('admin.')->group(function () {
 
-    // Dashboard admin
-    Route::get('dashboard', function () {
-        return view('admin.dashboard');
-    })->name('dashboard');
+    // ✅ Dashboard admin (pakai controller)
+    Route::get('dashboard', [AdminController::class, 'index'])->name('dashboard');
 
     // Halaman SPK
     Route::get('spk', [SawController::class, 'index'])->name('spk.index');
@@ -58,7 +53,7 @@ Route::prefix('admin')->name('admin.')->group(function () {
         Route::post('kosan/verifikasi/{id}', 'verifikasi')->name('kosan.verifikasi.update'); // approve / reject
 
         // Tampilkan semua kosan yang sudah di-approve (Admin)
-        Route::get('kosan/approved', 'approved')->name('kosan.approved'); // halaman admin kosan approved
+        Route::get('kosan/approved', 'approved')->name('kosan.approved');
     });
 
     // Kriteria & Penilaian (SPK)
@@ -68,7 +63,6 @@ Route::prefix('admin')->name('admin.')->group(function () {
     Route::get('penilaian/create', [\App\Http\Controllers\Admin\PenilaianController::class, 'create'])->name('penilaian.create');
     Route::post('penilaian/store', [\App\Http\Controllers\Admin\PenilaianController::class, 'store'])->name('penilaian.store');
 });
-
 
 /*
 |--------------------------------------------------------------------------
@@ -93,7 +87,7 @@ Route::prefix('pemilik')->name('pemilik.')->group(function () {
         Route::put('kosan/{id}', 'update')->name('kosan.update');
         Route::delete('kosan/{id}', 'destroy')->name('kosan.destroy');
 
-        // Menu status verifikasi pemilik (hanya melihat status, tidak approve/reject)
+        // Menu status verifikasi pemilik
         Route::get('kosan/verifikasi', 'verifikasiIndex')->name('kosan.verifikasi'); 
     });
 });

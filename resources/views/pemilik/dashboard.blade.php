@@ -55,7 +55,7 @@
                             <th>Alamat</th>
                             <th>Jumlah Kamar</th>
                             <th>Status Verifikasi</th>
-                            <th>Aksi</th>
+                    
                         </tr>
                     </thead>
                     <tbody>
@@ -72,14 +72,7 @@
                                     <span class="badge bg-warning text-dark">Belum</span>
                                 @endif
                             </td>
-                            <td>
-                                <a href="{{ route('pemilik.kosan.edit', $k->id) }}" class="btn btn-sm btn-primary">Edit</a>
-                                <form action="{{ route('pemilik.kosan.destroy', $k->id) }}" method="POST" class="d-inline" onsubmit="return confirm('Yakin ingin hapus kos ini?');">
-                                    @csrf
-                                    @method('DELETE')
-                                    <button class="btn btn-sm btn-danger">Hapus</button>
-                                </form>
-                            </td>
+                          
                         </tr>
                         @endforeach
                     </tbody>

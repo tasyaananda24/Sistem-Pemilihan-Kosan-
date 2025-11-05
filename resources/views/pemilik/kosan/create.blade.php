@@ -9,7 +9,6 @@
                 <p class="text-secondary">Lengkapi informasi di bawah ini untuk mendaftarkan kos Anda. Pastikan semua data akurat!</p>
             </div>
 
-            {{-- Error validasi --}}
             @if ($errors->any())
                 <div class="alert alert-danger alert-dismissible fade show shadow-sm mb-4" role="alert">
                     <h5 class="alert-heading fs-6 fw-bold">Perhatian!</h5>
@@ -29,32 +28,21 @@
                         <h5 class="fw-bold text-primary border-bottom pb-2 mb-3">Informasi Utama Kos</h5>
                     </div>
 
-                    {{-- Nama Kos --}}
                     <div class="col-md-6">
                         <label for="nama_kosan" class="form-label fw-semibold">Nama Kos</label>
                         <input type="text" id="nama_kosan" name="nama_kosan" class="form-control form-control-lg @error('nama_kosan') is-invalid @enderror" placeholder="Masukkan nama kos" value="{{ old('nama_kosan') }}" required>
                         @error('nama_kosan') <div class="invalid-feedback">{{ $message }}</div> @enderror
                     </div>
 
-                    {{-- Harga Sewa --}}
                     <div class="col-md-6">
                         <label for="harga_sewa" class="form-label fw-semibold">Harga Sewa / Bulan</label>
                         <div class="input-group input-group-lg @error('harga_sewa') is-invalid @enderror">
                             <span class="input-group-text bg-light border-end-0 text-dark fw-bold">Rp</span>
-                            <input 
-                                type="text" 
-                                id="harga_sewa" 
-                                name="harga_sewa" 
-                                class="form-control border-start-0 @error('harga_sewa') is-invalid @enderror" 
-                                placeholder="Contoh: 1.200.000" 
-                                value="{{ old('harga_sewa') }}" 
-                                required
-                                oninput="formatRupiah(this)">
+                            <input type="text" id="harga_sewa" name="harga_sewa" class="form-control border-start-0 @error('harga_sewa') is-invalid @enderror" placeholder="Contoh: 1.200.000" value="{{ old('harga_sewa') }}" required oninput="formatRupiah(this)">
                         </div>
                         @error('harga_sewa') <div class="invalid-feedback d-block">{{ $message }}</div> @enderror
                     </div>
 
-                    {{-- No HP / WhatsApp --}}
                     <div class="col-md-6">
                         <label for="no_hp" class="form-label fw-semibold">No. HP / WhatsApp</label>
                         <input type="text" id="no_hp" name="no_hp" class="form-control form-control-lg @error('no_hp') is-invalid @enderror" placeholder="0812xxxxxxx" value="{{ old('no_hp') }}" required>
@@ -65,14 +53,12 @@
                         <h5 class="fw-bold text-primary border-bottom pb-2 mb-3">Detail Properti</h5>
                     </div>
 
-                    {{-- Jumlah Kamar --}}
                     <div class="col-md-4">
                         <label for="jumlah_kamar" class="form-label fw-semibold">Jumlah Kamar Total</label>
                         <input type="number" id="jumlah_kamar" name="jumlah_kamar" class="form-control @error('jumlah_kamar') is-invalid @enderror" placeholder="Jumlah kamar" min="1" value="{{ old('jumlah_kamar') }}" required>
                         @error('jumlah_kamar') <div class="invalid-feedback">{{ $message }}</div> @enderror
                     </div>
 
-                    {{-- Luas Tanah --}}
                     <div class="col-md-4">
                         <label for="luas_tanah" class="form-label fw-semibold">Luas Kamar (Rata-rata)</label>
                         <select id="luas_tanah" name="luas_tanah" class="form-select @error('luas_tanah') is-invalid @enderror" required>
@@ -86,7 +72,6 @@
                         @error('luas_tanah') <div class="invalid-feedback">{{ $message }}</div> @enderror
                     </div>
 
-                    {{-- Jarak ke Kampus --}}
                     <div class="col-md-4">
                         <label for="jarak_ke_kampus" class="form-label fw-semibold">Jarak ke Kampus</label>
                         <select id="jarak_ke_kampus" name="jarak_ke_kampus" class="form-select @error('jarak_ke_kampus') is-invalid @enderror" required>
@@ -100,55 +85,46 @@
                         @error('jarak_ke_kampus') <div class="invalid-feedback">{{ $message }}</div> @enderror
                     </div>
 
-                    {{-- Fasilitas Kos --}}
                     <div class="col-md-8">
                         <label for="fasilitas" class="form-label fw-semibold">Fasilitas Kos</label>
                         <select id="fasilitas" name="fasilitas" class="form-select @error('fasilitas') is-invalid @enderror" required>
                             <option value="">-- Pilih Fasilitas --</option>
                             <option value="Kamar Mandi Dalam, 1 Kamar" {{ old('fasilitas') == 'Kamar Mandi Dalam, 1 Kamar' ? 'selected' : '' }}>Kamar Mandi Dalam, 1 Kamar Kosong</option>
                             <option value="Kamar Mandi Dalam, 1 Kamar, Kasur" {{ old('fasilitas') == 'Kamar Mandi Dalam, 1 Kamar, Kasur' ? 'selected' : '' }}>Kamar Mandi Dalam, 1 Kamar + Kasur</option>
-                            <option value="Kamar Mandi Dalam, Kasur, Dapur, Tempat Parkir Motor, 1 Kamar, 1 Ruangan" {{ old('fasilitas') == 'Kamar Mandi Dalam, Kasur, Dapur, Tempat Parkir Motor, 1 Kamar, 1 Ruangan' ? 'selected' : '' }}>Semi-Studio: Kamar Mandi Dalam, Kasur, Dapur Mini, Parkir Motor</option>
-                            <option value="Wifi, Kamar Mandi Dalam, Kasur, Dapur, Tempat Parkir Motor, 1 Kamar, 1 Ruangan" {{ old('fasilitas') == 'Wifi, Kamar Mandi Dalam, Kasur, Dapur, Tempat Parkir Motor, 1 Kamar, 1 Ruangan' ? 'selected' : '' }}>Full Studio: + Wifi, Kamar Mandi Dalam, Kasur, Dapur Mini, Parkir Motor</option>
-                            <option value="Wifi, Kamar Mandi Dalam, Kasur, Dapur, Tempat Parkir Motor, 2 Kamar, 1 Ruangan, Lemari, AC" {{ old('fasilitas') == 'Wifi, Kamar Mandi Dalam, Kasur, Dapur, Tempat Parkir Motor, 2 Kamar, 1 Ruangan, Lemari, AC' ? 'selected' : '' }}>2 Kamar Lengkap: + AC, Lemari, Wifi, Dapur</option>
+                            <option value="Kamar Mandi Dalam, Kasur, Dapur, Tempat Parkir Motor, 1 Kamar, 1 Ruangan" {{ old('fasilitas') == 'Kamar Mandi Dalam, Kasur, Dapur, Tempat Parkir Motor, 1 Kamar, 1 Ruangan' ? 'selected' : '' }}>Semi-Studio</option>
+                            <option value="Wifi, Kamar Mandi Dalam, Kasur, Dapur, Tempat Parkir Motor, 1 Kamar, 1 Ruangan" {{ old('fasilitas') == 'Wifi, Kamar Mandi Dalam, Kasur, Dapur, Tempat Parkir Motor, 1 Kamar, 1 Ruangan' ? 'selected' : '' }}>Full Studio</option>
+                            <option value="Wifi, Kamar Mandi Dalam, Kasur, Dapur, Tempat Parkir Motor, 2 Kamar, 1 Ruangan, Lemari, AC" {{ old('fasilitas') == 'Wifi, Kamar Mandi Dalam, Kasur, Dapur, Tempat Parkir Motor, 2 Kamar, 1 Ruangan, Lemari, AC' ? 'selected' : '' }}>2 Kamar Lengkap</option>
                         </select>
                         @error('fasilitas') <div class="invalid-feedback">{{ $message }}</div> @enderror
                     </div>
 
-                    {{-- Foto Kos --}}
                     <div class="col-md-4">
                         <label for="foto_kosan" class="form-label fw-semibold">Foto Kos (Maks. 2MB)</label>
                         <input type="file" id="foto_kosan" name="foto_kosan" class="form-control @error('foto_kosan') is-invalid @enderror" accept="image/*">
-                        <div class="form-text">Pilih foto terbaik tampak depan kos Anda.</div>
                         @error('foto_kosan') <div class="invalid-feedback">{{ $message }}</div> @enderror
                     </div>
 
-                    {{-- Alamat Kos --}}
                     <div class="col-12">
                         <label for="alamat_kosan" class="form-label fw-semibold">Alamat Kos Lengkap</label>
-                        <textarea id="alamat_kosan" name="alamat_kosan" class="form-control @error('alamat_kosan') is-invalid @enderror" rows="3" placeholder="Contoh: Jl. Sudirman No. 12, Kel. Sukamaju, Kec. Jatiasih" required>{{ old('alamat_kosan') }}</textarea>
+                        <textarea id="alamat_kosan" name="alamat_kosan" class="form-control @error('alamat_kosan') is-invalid @enderror" rows="3" placeholder="Jl. Sudirman No. 12, Kel. Sukamaju" required>{{ old('alamat_kosan') }}</textarea>
                         @error('alamat_kosan') <div class="invalid-feedback">{{ $message }}</div> @enderror
                     </div>
                 </div>
 
                 <div class="mt-5 d-flex justify-content-between">
-                    <a href="{{ route('pemilik.kosan.index') }}" class="btn btn-outline-secondary px-4 py-2">
-                        <i class="bi bi-arrow-left"></i> Kembali ke Daftar Kos
-                    </a>
-                    <button type="submit" class="btn text-white fw-bold px-5 py-2 shadow-sm" style="background-color: #8c6239; border: none;">
-                        <i class="bi bi-house-door-fill me-2"></i> Simpan Kos Baru
-                    </button>
+                    <a href="{{ route('pemilik.kosan.index') }}" class="btn btn-outline-secondary px-4 py-2"><i class="bi bi-arrow-left"></i> Kembali</a>
+                    <button type="submit" class="btn text-white fw-bold px-5 py-2 shadow-sm" style="background-color: #8c6239; border: none;"><i class="bi bi-house-door-fill me-2"></i> Simpan Kos Baru</button>
                 </div>
             </form>
         </div>
     </div>
 </div>
 
-{{-- 🟤 Script Format Rupiah --}}
 <script>
 function formatRupiah(input) {
-    let value = input.value.replace(/\D/g, ''); // Hapus semua karakter non-angka
+    let value = input.value.replace(/\D/g, '');
     if (value) {
-        input.value = value.replace(/\B(?=(\d{3})+(?!\d))/g, '.'); // Tambahkan titik setiap 3 digit
+        input.value = value.replace(/\B(?=(\d{3})+(?!\d))/g, '.');
     } else {
         input.value = '';
     }

@@ -27,13 +27,13 @@
     </div>
 
     <!-- Data Master -->
-    <li class="nav-item {{ request()->is('admin/kosan*') || request()->is('admin/kriteria*') || request()->is('admin/kosan/approved*') ? 'active' : '' }}">
+    <li class="nav-item {{ (request()->is('admin/kosan*') || request()->is('admin/kriteria*') || request()->is('admin/alternatif*')) ? 'active' : '' }}">
         <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseMaster"
            aria-expanded="true" aria-controls="collapseMaster">
             <i class="fas fa-fw fa-database"></i>
             <span>Data Master</span>
         </a>
-        <div id="collapseMaster" class="collapse {{ request()->is('admin/kosan*') || request()->is('admin/kriteria*') || request()->is('admin/alternatif*') ? 'show' : '' }}"
+        <div id="collapseMaster" class="collapse {{ (request()->is('admin/kosan*') || request()->is('admin/kriteria*') || request()->is('admin/alternatif*')) ? 'show' : '' }}"
              aria-labelledby="headingMaster" data-parent="#accordionSidebar">
             <div class="bg-white py-2 collapse-inner rounded">
                 <a class="collapse-item {{ request()->is('admin/kriteria*') ? 'active' : '' }}" href="{{ url('/admin/kriteria') }}">
@@ -47,7 +47,7 @@
     </li>
 
     <!-- Verifikasi -->
-    <li class="nav-item">
+    <li class="nav-item {{ request()->is('admin/verifikasi*') ? 'active' : '' }}">
         <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseVerif"
            aria-expanded="true" aria-controls="collapseVerif">
             <i class="fas fa-fw fa-check-circle"></i>
@@ -64,33 +64,15 @@
     </li>
 
     <!-- Proses SPK -->
-    <li class="nav-item">
-        <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseSPK"
-           aria-expanded="true" aria-controls="collapseSPK">
+    <li class="nav-item {{ request()->is('admin/spk*') ? 'active' : '' }}">
+        <a class="nav-link" href="{{ url('/admin/spk') }}">
             <i class="fas fa-fw fa-cogs"></i>
             <span>Proses SPK</span>
         </a>
-        <div id="collapseSPK" class="collapse {{ request()->is('admin/matriks*') || request()->is('admin/bobot*') || request()->is('admin/perhitungan*') || request()->is('admin/ranking*') ? 'show' : '' }}"
-             aria-labelledby="headingSPK" data-parent="#accordionSidebar">
-            <div class="bg-white py-2 collapse-inner rounded">
-                <a class="collapse-item {{ request()->is('admin/matriks*') ? 'active' : '' }}" href="{{ url('/admin/matriks') }}">
-                    <i class="fas fa-fw fa-table mr-2"></i> Matriks Keputusan
-                </a>
-                <a class="collapse-item {{ request()->is('admin/bobot*') ? 'active' : '' }}" href="{{ url('/admin/bobot') }}">
-                    <i class="fas fa-fw fa-balance-scale mr-2"></i> Bobot
-                </a>
-                <a class="collapse-item {{ request()->is('admin/perhitungan*') ? 'active' : '' }}" href="{{ url('/admin/perhitungan') }}">
-                    <i class="fas fa-fw fa-calculator mr-2"></i> Perhitungan SPK
-                </a>
-                <a class="collapse-item {{ request()->is('admin/ranking*') ? 'active' : '' }}" href="{{ url('/admin/ranking') }}">
-                    <i class="fas fa-fw fa-trophy mr-2"></i> Hasil Ranking
-                </a>
-            </div>
-        </div>
     </li>
 
     <!-- Laporan -->
-    <li class="nav-item">
+    <li class="nav-item {{ request()->is('admin/laporan*') ? 'active' : '' }}">
         <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseLaporan"
            aria-expanded="true" aria-controls="collapseLaporan">
             <i class="fas fa-fw fa-file-alt"></i>
@@ -124,14 +106,14 @@
 
 {{-- Style custom --}}
 <style>
-    /* Hanya highlight submenu aktif jadi coklat */
+    /* Highlight submenu aktif warna coklat */
     .sidebar .collapse-item.active {
         background-color: #8B4513 !important; /* coklat */
         color: #fff !important;
         border-radius: .35rem;
     }
 
-    /* Ikon dalam submenu aktif jadi putih */
+    /* Ikon submenu aktif jadi putih */
     .sidebar .collapse-item.active i {
         color: #fff !important;
     }

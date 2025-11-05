@@ -25,7 +25,6 @@
                 <th>Luas Tanah</th>
                 <th>Jarak ke Kampus</th>
                 <th>Foto</th>
-               
             </tr>
         </thead>
         <tbody>
@@ -34,9 +33,13 @@
                     <td>{{ $index + 1 }}</td>
                     <td>{{ $k->nama_kosan }}</td>
                     <td>
+                        @if($k->no_hp)
                         <a href="https://wa.me/{{ preg_replace('/[^0-9]/', '', $k->no_hp) }}" target="_blank" class="btn btn-sm btn-success">
                             {{ $k->no_hp }}
                         </a>
+                        @else
+                        <span class="text-muted">-</span>
+                        @endif
                     </td>
                     <td>{{ $k->alamat_kosan }}</td>
                     <td>Rp {{ number_format($k->harga_sewa, 0, ',', '.') }}</td>
@@ -45,17 +48,16 @@
                     <td>{{ $k->luas_tanah }}</td>
                     <td>{{ $k->jarak_ke_kampus }}</td>
                     <td>
-                        @if($k->foto_kosan)
-                            <img src="{{ asset('storage/'.$k->foto_kosan) }}" width="100">
+                        @if($k->foto_kosan && file_exists(public_path('assets/img/' . $k->foto_kosan)))
+                            <img src="{{ asset('assets/img/' . $k->foto_kosan) }}" width="100" alt="{{ $k->nama_kosan }}">
                         @else
-                            <span class="text-muted">-</span>
+                            <img src="{{ asset('assets/img/default-kosan.jpg') }}" width="100" alt="Tidak ada foto">
                         @endif
                     </td>
-        
                 </tr>
             @empty
                 <tr>
-                    <td colspan="12" class="text-center">Belum ada kosan terdaftar</td>
+                    <td colspan="10" class="text-center">Belum ada kosan terdaftar</td>
                 </tr>
             @endforelse
         </tbody>
