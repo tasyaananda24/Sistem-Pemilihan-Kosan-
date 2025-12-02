@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\KosApproved;
+use App\Models\Kriteria;
 
 class SawController extends Controller
 {
@@ -50,19 +51,25 @@ class SawController extends Controller
 
     public function index()
     {
-        // Bobot kriteria
-        $kriteria = [
-            'c1' => ['nama' => 'Harga', 'bobot' => 0.35, 'atribut' => 'cost'],
-            'c2' => ['nama' => 'Jarak', 'bobot' => 0.25, 'atribut' => 'cost'],
-            'c3' => ['nama' => 'Fasilitas', 'bobot' => 0.20, 'atribut' => 'benefit'],
-            'c4' => ['nama' => 'Luas', 'bobot' => 0.20, 'atribut' => 'benefit'],
-        ];
+        // ⬅️ 1. Ambil data kriteria dari database
+        $dbKriteria = Kriteria::orderBy('kode')->get();
+
+        // Ubah format agar sama dengan struktur lama
+        $kriteria = [];
+        foreach ($dbKriteria as $kr) {
+            $kriteria[strtolower($kr->kode)] = [
+                'nama'    => $kr->nama_kriteria,
+                'bobot'   => $kr->bobot,
+                'atribut' => $kr->atribut
+            ];
+        }
 
         $alternatif = KosApproved::all();
 
-        // 1️⃣ Mapping nilai alternatif ke skala 1–5
+        // 2️⃣ Mapping nilai alternatif
         $matrix = [];
         $namaKos = [];
+
         foreach ($alternatif as $alt) {
             $matrix[$alt->id]['c1'] = $this->nilaiHarga($alt->harga_sewa);
             $matrix[$alt->id]['c2'] = $this->nilaiJarak($alt->jarak_ke_kampus);
@@ -72,9 +79,10 @@ class SawController extends Controller
             $namaKos[$alt->id] = $alt->nama_kosan;
         }
 
-        // 2️⃣ Normalisasi
+        // 3️⃣ Normalisasi
         $normalisasi = [];
         foreach ($kriteria as $key => $krit) {
+
             $kolom = array_column($matrix, $key);
             $max = max($kolom);
             $min = min($kolom);
@@ -88,21 +96,22 @@ class SawController extends Controller
             }
         }
 
-        // 3️⃣ Hitung nilai preferensi
+        // 4️⃣ Hitung preferensi
         $preferensi = [];
         foreach ($alternatif as $alt) {
             $total = 0;
             foreach ($kriteria as $key => $krit) {
                 $total += $normalisasi[$alt->id][$key] * $krit['bobot'];
             }
+
             $preferensi[] = [
                 'nama' => $alt->nama_kosan,
                 'nilai' => round($total, 4),
             ];
         }
 
-        // 4️⃣ Urutkan ranking descending
         usort($preferensi, fn($a, $b) => $b['nilai'] <=> $a['nilai']);
+
         foreach ($preferensi as $i => &$p) {
             $p['rank'] = $i + 1;
         }
