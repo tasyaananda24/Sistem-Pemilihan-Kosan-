@@ -81,7 +81,10 @@
         <div id="collapseLaporan" class="collapse {{ request()->is('admin/laporan*') ? 'show' : '' }}"
              aria-labelledby="headingLaporan" data-parent="#accordionSidebar">
             <div class="bg-white py-2 collapse-inner rounded">
-                <a class="collapse-item {{ request()->is('admin/laporan*') ? 'active' : '' }}" href="{{ url('/admin/laporan') }}">
+
+                {{-- PERBAIKAN PENTING --}}
+                <a class="collapse-item {{ request()->is('admin/laporan*') ? 'active' : '' }}" 
+                   href="{{ route('admin.laporan.index') }}">
                     <i class="fas fa-fw fa-file-alt mr-2"></i> Laporan
                 </a>
             </div>
@@ -106,14 +109,12 @@
 
 {{-- Style custom --}}
 <style>
-    /* Highlight submenu aktif warna coklat */
     .sidebar .collapse-item.active {
-        background-color: #8B4513 !important; /* coklat */
+        background-color: #8B4513 !important;
         color: #fff !important;
         border-radius: .35rem;
     }
 
-    /* Ikon submenu aktif jadi putih */
     .sidebar .collapse-item.active i {
         color: #fff !important;
     }

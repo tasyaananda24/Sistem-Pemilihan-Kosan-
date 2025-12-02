@@ -41,11 +41,14 @@ Route::controller(AuthController::class)->group(function () {
 */
 Route::prefix('admin')->name('admin.')->group(function () {
 
-    // ✅ Dashboard admin (pakai controller)
+    // Dashboard admin (pakai controller)
     Route::get('dashboard', [AdminController::class, 'index'])->name('dashboard');
 
     // Halaman SPK
     Route::get('spk', [SawController::class, 'index'])->name('spk.index');
+
+    // ➕ (DITAMBAHKAN) Laporan SPK – Kosan terbaik versi SAW
+    Route::get('laporan', [SawController::class, 'laporan'])->name('laporan.index');
 
     // Verifikasi Kosan Admin
     Route::controller(KosanAdminController::class)->group(function () {

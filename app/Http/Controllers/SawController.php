@@ -118,4 +118,71 @@ class SawController extends Controller
 
         return view('admin.spk.index', compact('kriteria','matrix','normalisasi','preferensi','namaKos'));
     }
+    public function laporan()
+{
+    // Ambil data kriteria
+    $dbKriteria = Kriteria::orderBy('kode')->get();
+
+    $kriteria = [];
+    foreach ($dbKriteria as $kr) {
+        $kriteria[strtolower($kr->kode)] = [
+            'nama'    => $kr->nama_kriteria,
+            'bobot'   => $kr->bobot,
+            'atribut' => $kr->atribut
+        ];
+    }
+
+    $alternatif = KosApproved::all();
+
+    // Mapping nilai alternatif
+    $matrix = [];
+    foreach ($alternatif as $alt) {
+        $matrix[$alt->id]['c1'] = $this->nilaiHarga($alt->harga_sewa);
+        $matrix[$alt->id]['c2'] = $this->nilaiJarak($alt->jarak_ke_kampus);
+        $matrix[$alt->id]['c3'] = $this->nilaiFasilitas($alt->fasilitas);
+        $matrix[$alt->id]['c4'] = $this->nilaiLuas($alt->luas_tanah);
+    }
+
+    // Normalisasi
+    $normalisasi = [];
+    foreach ($kriteria as $key => $krit) {
+        $kolom = array_column($matrix, $key);
+        $max = max($kolom);
+        $min = min($kolom);
+
+        foreach ($matrix as $altId => $nilai) {
+            if ($krit['atribut'] == 'benefit') {
+                $normalisasi[$altId][$key] = $nilai[$key] / $max;
+            } else {
+                $normalisasi[$altId][$key] = $min / $nilai[$key];
+            }
+        }
+    }
+
+    // Hitung preferensi
+    $preferensi = [];
+    foreach ($alternatif as $alt) {
+        $total = 0;
+        foreach ($kriteria as $key => $krit) {
+            $total += $normalisasi[$alt->id][$key] * $krit['bobot'];
+        }
+
+        $preferensi[] = [
+            'id' => $alt->id,
+            'nama' => $alt->nama_kosan,
+            'alamat' => $alt->alamat,
+            'nilai' => round($total, 4),
+        ];
+    }
+
+    // Urutkan descending
+    usort($preferensi, fn($a, $b) => $b['nilai'] <=> $a['nilai']);
+
+    // Ambil terbaik
+    $terbaik = $preferensi[0];
+
+    // Kirim ke view
+    return view('admin.laporan.index', compact('preferensi', 'terbaik'));
+}
+
 }
