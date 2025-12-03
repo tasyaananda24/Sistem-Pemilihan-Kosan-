@@ -118,7 +118,7 @@ class SawController extends Controller
 
         return view('admin.spk.index', compact('kriteria','matrix','normalisasi','preferensi','namaKos'));
     }
-    public function laporan()
+public function laporan()
 {
     // Ambil data kriteria
     $dbKriteria = Kriteria::orderBy('kode')->get();
@@ -178,11 +178,35 @@ class SawController extends Controller
     // Urutkan descending
     usort($preferensi, fn($a, $b) => $b['nilai'] <=> $a['nilai']);
 
+    // Tambahkan ranking
+    foreach ($preferensi as $i => &$p) {
+        $p['ranking'] = $i + 1;
+    }
+
     // Ambil terbaik
     $terbaik = $preferensi[0];
+
+    /* ======================
+       SIMPAN KE DATABASE
+       ====================== */
+
+    // Hapus laporan lama
+    \App\Models\LaporanSaw::truncate();
+
+    // Simpan laporan baru
+    foreach ($preferensi as $p) {
+        \App\Models\LaporanSaw::create([
+            'kos_id'           => $p['id'],
+            'nama_kosan'       => $p['nama'],
+            'alamat'           => $p['alamat'],
+            'nilai_preferensi' => $p['nilai'],
+            'ranking'          => $p['ranking'],
+        ]);
+    }
 
     // Kirim ke view
     return view('admin.laporan.index', compact('preferensi', 'terbaik'));
 }
+
 
 }
