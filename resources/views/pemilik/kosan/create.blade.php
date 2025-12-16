@@ -1,133 +1,191 @@
 @extends('themepemilik.default')
 
 @section('content')
-<div class="container-fluid py-5" style="background-color: #e9ecef; min-height: 100vh;">
-    <div class="card shadow-lg border-0 mx-auto" style="border-radius: 1rem; max-width: 1000px;">
-        <div class="card-body p-4 p-md-5">
-            <div class="text-center mb-5">
-                <h2 class="text-dark fw-bolder mb-2">🏠 Form Pendaftaran Kos</h2>
-                <p class="text-secondary">Lengkapi informasi di bawah ini untuk mendaftarkan kos Anda. Pastikan semua data akurat!</p>
-            </div>
 
-            @if ($errors->any())
-                <div class="alert alert-danger alert-dismissible fade show shadow-sm mb-4" role="alert">
-                    <h5 class="alert-heading fs-6 fw-bold">Perhatian!</h5>
-                    <ul class="mb-0">
-                        @foreach ($errors->all() as $error)
-                            <li>{{ $error }}</li>
-                        @endforeach
-                    </ul>
-                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-                </div>
-            @endif
+<style>
+    .input-big {
+        height: 58px !important;
+        font-size: 1.05rem !important;
+        padding: 12px 16px !important;
+        border-radius: 12px !important;
+    }
+
+    .dropdown-grey {
+        background-color: #f4f4f4 !important;
+        border-color: #d0d0d0 !important;
+        color: #333 !important;
+    }
+
+    .dropdown-grey:focus {
+        background-color: #e3e3e3 !important;
+        border-color: #999 !important;
+        box-shadow: none !important;
+    }
+
+    label {
+        font-weight: 600;
+        font-size: 1rem;
+    }
+
+    .card {
+        border-radius: 16px !important;
+    }
+
+    .header-grey {
+        background-color: #6c757d !important; /* Abu-abu elegan */
+        color: white !important;
+    }
+</style>
+
+<div class="container-fluid px-4">
+
+    <div class="card shadow-lg border-0 mt-4 w-100">
+        <div class="card-header header-grey py-3">
+            <h4 class="mb-0">
+                <i class="fas fa-plus-circle me-2"></i> Tambah Data Kosan
+            </h4>
+        </div>
+
+        <div class="card-body px-4 py-4">
 
             <form action="{{ route('pemilik.kosan.store') }}" method="POST" enctype="multipart/form-data">
                 @csrf
-                <div class="row g-4">
-                    <div class="col-12">
-                        <h5 class="fw-bold text-primary border-bottom pb-2 mb-3">Informasi Utama Kos</h5>
+
+                <!-- ROW 1 -->
+                <div class="row mb-4">
+
+                    <div class="col-md-6 mb-3">
+                        <label>Nama Kosan</label>
+                        <input type="text" 
+                            name="nama_kosan" 
+                            class="form-control input-big"
+                            placeholder="Masukkan nama kosan"
+                            required>
                     </div>
 
-                    <div class="col-md-6">
-                        <label for="nama_kosan" class="form-label fw-semibold">Nama Kos</label>
-                        <input type="text" id="nama_kosan" name="nama_kosan" class="form-control form-control-lg @error('nama_kosan') is-invalid @enderror" placeholder="Masukkan nama kos" value="{{ old('nama_kosan') }}" required>
-                        @error('nama_kosan') <div class="invalid-feedback">{{ $message }}</div> @enderror
+                    <div class="col-md-6 mb-3">
+                        <label>Alamat Kosan</label>
+                        <input type="text" 
+                            name="alamat_kosan" 
+                            class="form-control input-big"
+                            placeholder="Masukkan alamat lengkap"
+                            required>
                     </div>
 
-                    <div class="col-md-6">
-                        <label for="harga_sewa" class="form-label fw-semibold">Harga Sewa / Bulan</label>
-                        <div class="input-group input-group-lg @error('harga_sewa') is-invalid @enderror">
-                            <span class="input-group-text bg-light border-end-0 text-dark fw-bold">Rp</span>
-                            <input type="text" id="harga_sewa" name="harga_sewa" class="form-control border-start-0 @error('harga_sewa') is-invalid @enderror" placeholder="Contoh: 1.200.000" value="{{ old('harga_sewa') }}" required oninput="formatRupiah(this)">
-                        </div>
-                        @error('harga_sewa') <div class="invalid-feedback d-block">{{ $message }}</div> @enderror
-                    </div>
+                </div>
 
-                    <div class="col-md-6">
-                        <label for="no_hp" class="form-label fw-semibold">No. HP / WhatsApp</label>
-                        <input type="text" id="no_hp" name="no_hp" class="form-control form-control-lg @error('no_hp') is-invalid @enderror" placeholder="0812xxxxxxx" value="{{ old('no_hp') }}" required>
-                        @error('no_hp') <div class="invalid-feedback">{{ $message }}</div> @enderror
-                    </div>
+                <!-- NO HP -->
+                <div class="mb-4">
+                    <label>No HP Pemilik</label>
+                    <input type="text" 
+                        name="no_hp" 
+                        class="form-control input-big"
+                        placeholder="Contoh: 08123456789"
+                        required>
+                </div>
 
-                    <div class="col-12 mt-4">
-                        <h5 class="fw-bold text-primary border-bottom pb-2 mb-3">Detail Properti</h5>
-                    </div>
+                <!-- HARGA -->
+                <div class="mb-4">
+                    <label>Harga Sewa (per bulan)</label>
 
-                    <div class="col-md-4">
-                        <label for="jumlah_kamar" class="form-label fw-semibold">Jumlah Kamar Total</label>
-                        <input type="number" id="jumlah_kamar" name="jumlah_kamar" class="form-control @error('jumlah_kamar') is-invalid @enderror" placeholder="Jumlah kamar" min="1" value="{{ old('jumlah_kamar') }}" required>
-                        @error('jumlah_kamar') <div class="invalid-feedback">{{ $message }}</div> @enderror
-                    </div>
+                    <input type="text" 
+                        id="harga_sewa_display"
+                        class="form-control input-big"
+                        placeholder="Contoh: 1.500.000"
+                        required>
 
-                    <div class="col-md-4">
-                        <label for="luas_tanah" class="form-label fw-semibold">Luas Kamar (Rata-rata)</label>
-                        <select id="luas_tanah" name="luas_tanah" class="form-select @error('luas_tanah') is-invalid @enderror" required>
-                            <option value="">-- Pilih Luas Kamar --</option>
-                            <option value="3x3 m²" {{ old('luas_tanah') == '3x3 m²' ? 'selected' : '' }}>3x3 m²</option>
-                            <option value="3x5 m²" {{ old('luas_tanah') == '3x5 m²' ? 'selected' : '' }}>3x5 m²</option>
-                            <option value="4x6 m²" {{ old('luas_tanah') == '4x6 m²' ? 'selected' : '' }}>4x6 m²</option>
-                            <option value="4x7 m²" {{ old('luas_tanah') == '4x7 m²' ? 'selected' : '' }}>4x7 m²</option>
-                            <option value="5x8 m²" {{ old('luas_tanah') == '5x8 m²' ? 'selected' : '' }}>5x8 m²</option>
+                    <input type="hidden" name="harga_sewa" id="harga_sewa">
+                </div>
+
+                <!-- JUMLAH KAMAR -->
+                <div class="mb-4">
+                    <label>Jumlah Kamar</label>
+                    <input type="number" 
+                        name="jumlah_kamar" 
+                        class="form-control input-big"
+                        placeholder="Contoh: 10"
+                        required>
+                </div>
+
+                <!-- ROW DROPDOWN -->
+                <div class="row mb-4">
+
+                    <div class="col-md-4 mb-3">
+                        <label>Jarak ke Kampus</label>
+                        <select name="jarak_ke_kampus" class="form-select input-big dropdown-grey" required>
+                            <option value="">-- Pilih Jarak --</option>
+                            <option value="200">Sangat dekat (≤ 200 m)</option>
+                            <option value="500">Dekat (200–500 m)</option>
+                            <option value="1000">Menengah (500–1000 m)</option>
+                            <option value="2000">Jauh (1–2 km)</option>
+                            <option value="3000">Sangat jauh (> 2 km)</option>
                         </select>
-                        @error('luas_tanah') <div class="invalid-feedback">{{ $message }}</div> @enderror
                     </div>
 
-                    <div class="col-md-4">
-                        <label for="jarak_ke_kampus" class="form-label fw-semibold">Jarak ke Kampus</label>
-                        <select id="jarak_ke_kampus" name="jarak_ke_kampus" class="form-select @error('jarak_ke_kampus') is-invalid @enderror" required>
-                            <option value="">-- Pilih Jarak Kos ke Kampus --</option>
-                            <option value="<= 1000 m" {{ old('jarak_ke_kampus') == '<= 1000 m' ? 'selected' : '' }}><= 1000 m (Sangat Dekat)</option>
-                            <option value="> 1000 m <=1500 m" {{ old('jarak_ke_kampus') == '> 1000 m <=1500 m' ? 'selected' : '' }}> > 1000 m s/d 1500 m</option>
-                            <option value="> 1500 m <=2000 m" {{ old('jarak_ke_kampus') == '> 1500 m <=2000 m' ? 'selected' : '' }}> > 1500 m s/d 2000 m</option>
-                            <option value="> 2000 m <= 2500 m" {{ old('jarak_ke_kampus') == '> 2000 m <= 2500 m' ? 'selected' : '' }}> > 2000 m s/d 2500 m</option>
-                            <option value=">= 2500 m" {{ old('jarak_ke_kampus') == '>= 2500 m' ? 'selected' : '' }}>>= 2500 m (Jauh)</option>
-                        </select>
-                        @error('jarak_ke_kampus') <div class="invalid-feedback">{{ $message }}</div> @enderror
-                    </div>
-
-                    <div class="col-md-8">
-                        <label for="fasilitas" class="form-label fw-semibold">Fasilitas Kos</label>
-                        <select id="fasilitas" name="fasilitas" class="form-select @error('fasilitas') is-invalid @enderror" required>
+                    <div class="col-md-4 mb-3">
+                        <label>Fasilitas</label>
+                        <select name="fasilitas" class="form-select input-big dropdown-grey">
                             <option value="">-- Pilih Fasilitas --</option>
-                            <option value="Kamar Mandi Dalam, 1 Kamar" {{ old('fasilitas') == 'Kamar Mandi Dalam, 1 Kamar' ? 'selected' : '' }}>Kamar Mandi Dalam, 1 Kamar Kosong</option>
-                            <option value="Kamar Mandi Dalam, 1 Kamar, Kasur" {{ old('fasilitas') == 'Kamar Mandi Dalam, 1 Kamar, Kasur' ? 'selected' : '' }}>Kamar Mandi Dalam, 1 Kamar + Kasur</option>
-                            <option value="Kamar Mandi Dalam, Kasur, Dapur, Tempat Parkir Motor, 1 Kamar, 1 Ruangan" {{ old('fasilitas') == 'Kamar Mandi Dalam, Kasur, Dapur, Tempat Parkir Motor, 1 Kamar, 1 Ruangan' ? 'selected' : '' }}>Semi-Studio</option>
-                            <option value="Wifi, Kamar Mandi Dalam, Kasur, Dapur, Tempat Parkir Motor, 1 Kamar, 1 Ruangan" {{ old('fasilitas') == 'Wifi, Kamar Mandi Dalam, Kasur, Dapur, Tempat Parkir Motor, 1 Kamar, 1 Ruangan' ? 'selected' : '' }}>Full Studio</option>
-                            <option value="Wifi, Kamar Mandi Dalam, Kasur, Dapur, Tempat Parkir Motor, 2 Kamar, 1 Ruangan, Lemari, AC" {{ old('fasilitas') == 'Wifi, Kamar Mandi Dalam, Kasur, Dapur, Tempat Parkir Motor, 2 Kamar, 1 Ruangan, Lemari, AC' ? 'selected' : '' }}>2 Kamar Lengkap</option>
+                            <option value="Lengkap">Fasilitas Lengkap</option>
+                            <option value="Standar">Standar</option>
+                            <option value="Minim">Minim</option>
                         </select>
-                        @error('fasilitas') <div class="invalid-feedback">{{ $message }}</div> @enderror
                     </div>
 
-                    <div class="col-md-4">
-                        <label for="foto_kosan" class="form-label fw-semibold">Foto Kos (Maks. 2MB)</label>
-                        <input type="file" id="foto_kosan" name="foto_kosan" class="form-control @error('foto_kosan') is-invalid @enderror" accept="image/*">
-                        @error('foto_kosan') <div class="invalid-feedback">{{ $message }}</div> @enderror
+                    <div class="col-md-4 mb-3">
+                        <label>Luas Tanah</label>
+                        <select name="luas_tanah" class="form-select input-big dropdown-grey" required>
+                            <option value="">-- Pilih Luas Tanah --</option>
+                            <option value="10">Kecil (≤ 10 m²)</option>
+                            <option value="20">Sedang (10–20 m²)</option>
+                            <option value="30">Luas (20–30 m²)</option>
+                            <option value="40">Sangat luas (> 30 m²)</option>
+                        </select>
                     </div>
 
-                    <div class="col-12">
-                        <label for="alamat_kosan" class="form-label fw-semibold">Alamat Kos Lengkap</label>
-                        <textarea id="alamat_kosan" name="alamat_kosan" class="form-control @error('alamat_kosan') is-invalid @enderror" rows="3" placeholder="Jl. Sudirman No. 12, Kel. Sukamaju" required>{{ old('alamat_kosan') }}</textarea>
-                        @error('alamat_kosan') <div class="invalid-feedback">{{ $message }}</div> @enderror
-                    </div>
                 </div>
 
-                <div class="mt-5 d-flex justify-content-between">
-                    <a href="{{ route('pemilik.kosan.index') }}" class="btn btn-outline-secondary px-4 py-2"><i class="bi bi-arrow-left"></i> Kembali</a>
-                    <button type="submit" class="btn text-white fw-bold px-5 py-2 shadow-sm" style="background-color: #8c6239; border: none;"><i class="bi bi-house-door-fill me-2"></i> Simpan Kos Baru</button>
+                <!-- FOTO -->
+                <div class="mb-4">
+                    <label>Upload Foto Kosan</label>
+                    <input type="file" 
+                        name="foto_kosan" 
+                        class="form-control input-big">
                 </div>
+
+                <!-- BUTTONS -->
+                <div class="d-flex justify-content-between mt-4">
+
+                    <!-- BUTTON KEMBALI -->
+                    <a href="{{ route('pemilik.kosan.index') }}" 
+                    class="btn btn-secondary btn-lg px-5 py-3">
+                        <i class="fas fa-arrow-left me-2"></i> Kembali
+                    </a>
+
+                    <!-- BUTTON SIMPAN -->
+                    <button type="submit" class="btn btn-primary btn-lg px-5 py-3">
+                        <i class="fas fa-save me-2"></i> Simpan Data
+                    </button>
+
+                </div>
+
             </form>
+
         </div>
     </div>
+
 </div>
 
 <script>
-function formatRupiah(input) {
-    let value = input.value.replace(/\D/g, '');
-    if (value) {
-        input.value = value.replace(/\B(?=(\d{3})+(?!\d))/g, '.');
-    } else {
-        input.value = '';
-    }
-}
+    const displayInput = document.getElementById("harga_sewa_display");
+    const hiddenInput = document.getElementById("harga_sewa");
+
+    displayInput.addEventListener("input", function () {
+        let angka = this.value.replace(/\D/g, "");  
+        let format = angka.replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+        this.value = format;
+        hiddenInput.value = angka;
+    });
 </script>
+
 @endsection

@@ -5,338 +5,313 @@
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
   <title>Rekomendasi Kost</title>
 
+  <!-- Bootstrap & JQuery -->
   <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
-  <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+  <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.2/dist/js/bootstrap.bundle.min.js"></script>
 
   <style>
-    /* Navbar */
+    /* ================= GLOBAL ================= */
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background-color: #f8f9fa;
+    }
+
+    /* ================= NAVBAR ================= */
     .navbar-custom {
-      background-color: #7C3E1D;
-      height: 85px;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      padding: 0 5%;
-      position: sticky;
-      top: 0;
-      z-index: 1000;
+      background-color: #1f2a40;
+      padding: 15px 30px;
     }
 
     .navbar-brand {
-      font-family: 'Walibi0615', sans-serif;
-      font-size: 28px;
-      font-weight: bold;
-      color: #FFFBF2 !important;
+      color: #fff;
+      font-weight: 600;
       display: flex;
       align-items: center;
     }
 
     .navbar-brand img {
-      width: 35px;
-      height: 35px;
-      margin-right: 10px;
+      width: 28px;
+      margin-right: 8px;
     }
 
     .nav-btn {
-      width: 140px;
-      height: 45px;
-      font-family: 'SF Pro Display', sans-serif;
-      font-size: 15px;
-      border-radius: 25px;
-      margin-left: 10px;
-      font-weight: 500;
-      color: #FFFBF2;
-      border: 1px solid rgba(255, 255, 255, 0.4);
-      background: rgba(255, 255, 255, 0.2);
-      backdrop-filter: blur(10px);
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      transition: all 0.3s ease;
-      text-align: center;
-    }
-
-    .nav-btn:hover {
-      background: #A3B18A;
-      color: #FFFBF2;
-      border: 1px solid #A3B18A;
-    }
-
-    .nav-btn.active {
-      background: #A3B18A;
-      color: #FFFBF2 !important;
-    }
-
-    body {
-      background-color: #F5F5DC;
-      font-family: 'SF Pro Display', sans-serif;
-      color: #3F3F3F;
-    }
-
-    .hero-section {
-      position: relative;
-      text-align: center;
-    }
-
-    .hero-image {
-      display: block;
-      width: 100%;
-      max-height: 400px;
-      object-fit: cover;
-    }
-
-    .rekomendasi-box {
-      position: absolute;
-      left: 50%;
-      bottom: -60px;
-      transform: translateX(-50%);
-      background: #FFFBF2;
-      border-radius: 15px;
-      padding: 20px 25px;
-      box-shadow: 0 4px 12px rgba(0,0,0,0.15);
-      max-width: 950px;
-      width: 95%;
-    }
-
-    .box-title {
-      font-weight: 600;
-      font-size: 14px;
-      margin-bottom: 10px;
-      color: #3F3F3F;
-    }
-
-    .filter-btn {
-      background: #F5F5DC;
-      border: none;
+      color: #fff;
+      margin: 5px 10px;
+      padding: 8px 18px;
       border-radius: 20px;
-      padding: 6px 18px;
-      margin-right: 6px;
-      font-size: 14px;
-      font-weight: 500;
-      color: #3F3F3F;
+      text-decoration: none;
       transition: 0.3s;
     }
 
-    .filter-btn.active {
-      background-color: #A3B18A;
-      color: #fff;
+    .nav-btn:hover,
+    .nav-btn.active {
+      background-color: #ffc107;
+      color: #000;
     }
 
-    .filter-btn:hover {
-      background-color: #cfd4b3;
+    /* ================= HERO ================= */
+    .hero-section {
+      position: relative;
+    }
+
+    .hero-image {
+      width: 100%;
+      height: 420px;
+      object-fit: cover;
+    }
+
+    /* ================= SEARCH BOX ================= */
+    .rekomendasi-box {
+      position: absolute;
+      bottom: -40px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: #fff;
+      width: 90%;
+      max-width: 900px;
+      padding: 25px;
+      border-radius: 15px;
+      box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+    }
+
+    .box-title {
+      font-size: 20px;
+      font-weight: 700;
+      margin-bottom: 15px;
+      text-align: center;
+    }
+
+    .filter-btn {
+      border: 1px solid #dee2e6;
+      background: #f8f9fa;
+      padding: 8px 18px;
+      border-radius: 20px;
+      margin: 5px;
+      cursor: pointer;
+      transition: 0.3s;
+      font-weight: 500;
+    }
+
+    .filter-btn:hover,
+    .filter-btn.active {
+      background: #ffc107;
+      border-color: #ffc107;
+      color: #000;
     }
 
     .search-box {
       display: flex;
       align-items: center;
-      background: #F5F5DC;
-      border-radius: 10px;
-      padding: 6px 10px;
-      margin-top: 12px;
+      background: #f8f9fa;
+      padding: 8px 12px;
+      border-radius: 30px;
+      margin-top: 10px;
     }
 
     .search-box input {
       border: none;
+      outline: none;
       background: transparent;
       flex: 1;
-      padding: 8px;
-      font-size: 15px;
-      outline: none;
-      color: #3F3F3F;
+      padding: 8px 12px;
     }
 
     .search-btn {
-      background-color: #A3B18A;
-      border: none;
-      padding: 8px 18px;
-      border-radius: 8px;
+      background: #1f2a40;
       color: #fff;
-      font-weight: 500;
+      border: none;
+      padding: 8px 22px;
+      border-radius: 25px;
       transition: 0.3s;
     }
 
     .search-btn:hover {
-      background-color: #7c8c66;
+      background: #ffc107;
+      color: #000;
     }
 
+    /* ================= TITLE ================= */
     .section-title {
       text-align: center;
-      margin-top: 100px;
+      margin-top: 90px;
     }
 
     .section-title h2 {
-      font-weight: bold;
-      color: #3F3F3F;
+      font-weight: 700;
     }
 
     .section-title p {
-      color: #3F3F3F;
+      color: #6c757d;
     }
 
-    /* Kartu kost */
+    /* ================= CARD ================= */
     .kos-card {
-      height: 100%;
-      border: none;
-      border-radius: 12px;
-      transition: transform 0.3s ease, box-shadow 0.3s ease;
+      border-radius: 15px;
+      overflow: hidden;
+      transition: 0.3s;
     }
 
     .kos-card:hover {
-      transform: translateY(-6px);
-      box-shadow: 0 8px 18px rgba(0,0,0,0.2);
+      transform: translateY(-5px);
     }
 
     .kos-card img {
-      height: 220px;
+      height: 200px;
       object-fit: cover;
-      border-top-left-radius: 12px;
-      border-top-right-radius: 12px;
+    }
+
+    .card-title {
+      font-weight: 600;
+    }
+
+    .card-text {
+      font-size: 14px;
+      color: #555;
     }
 
     .btn-detail {
-      background-color: #A3B18A;
-      border: none;
+      background: #1f2a40;
       color: #fff;
-      font-weight: 500;
-      transition: 0.3s;
-      border-radius: 8px;
-      padding: 10px;
+      border-radius: 20px;
     }
 
     .btn-detail:hover {
-      background-color: #7c8c66;
+      background: #ffc107;
+      color: #000;
+    }
+
+    /* ================= MODAL ================= */
+    .modal-content {
+      border-radius: 15px;
+    }
+
+    .modal-header {
+      background: #1f2a40;
       color: #fff;
     }
 
-    /* Responsif burger menu */
-    @media (max-width: 992px) {
-      .nav-btn {
-        width: 100%;
-        margin: 5px 0;
+    .modal-header .close {
+      color: #fff;
+    }
+
+    /* ================= RESPONSIVE ================= */
+    @media (max-width: 768px) {
+      .hero-image {
+        height: 300px;
       }
-      .navbar-collapse {
-        background-color: #7C3E1D;
-        border-radius: 10px;
-        padding: 10px;
+
+      .rekomendasi-box {
+        position: static;
+        transform: none;
+        margin-top: 20px;
+      }
+
+      .section-title {
+        margin-top: 40px;
       }
     }
   </style>
 </head>
+
 <body>
 
-  <!-- Navbar -->
-  <nav class="navbar navbar-expand-lg navbar-custom">
-    <a class="navbar-brand" href="{{ url('/') }}">
-      <img src="{{ asset('assets/material-symbols--home-work-rounded.svg') }}" alt="Logo Rumah"> 
-      KosFinder
-    </a>
+<!-- ================= NAVBAR ================= -->
+<nav class="navbar navbar-expand-lg navbar-custom">
+  <a class="navbar-brand" href="{{ url('/') }}">
+    <img src="{{ asset('assets/material-symbols--home-work-rounded.svg') }}">
+    KosFinder
+  </a>
 
-    <button class="navbar-toggler text-white" type="button" data-toggle="collapse" data-target="#navbarNav">
-      <span class="navbar-toggler-icon" style="filter: invert(100%);"></span>
-    </button>
+  <button class="navbar-toggler text-white" type="button" data-toggle="collapse" data-target="#navbarNav">
+    <span class="navbar-toggler-icon" style="filter: invert(100%);"></span>
+  </button>
 
-    <div class="collapse navbar-collapse justify-content-end" id="navbarNav">
-      <div class="d-flex flex-wrap justify-content-center">
-        <a href="{{ url('/') }}" class="nav-btn active">Beranda</a>
-        <a href="{{ url('/kos-terbaru') }}" class="nav-btn">Kos Terbaru</a>
-        <a href="{{ url('/tentang') }}" class="nav-btn">Tentang</a>
-        <a href="{{ route('login') }}" class="nav-btn">Login</a>
-      </div>
-    </div>
-  </nav>
+  <div class="collapse navbar-collapse justify-content-end" id="navbarNav">
+    <a href="{{ url('/') }}" class="nav-btn active">Beranda</a>
+    <a href="{{ route('login') }}" class="nav-btn">Login</a>
+  </div>
+</nav>
 
-  <!-- Hero Section -->
-  <section class="hero-section">
-    <img src="{{ asset('assets/img/kosan.jpeg') }}" alt="Gambar Kosan" class="hero-image">
+<!-- ================= HERO ================= -->
+<section class="hero-section">
+  <img src="{{ asset('assets/img/kosan.jpeg') }}" class="hero-image">
 
-    <!-- Box rekomendasi melayang -->
-    <div class="rekomendasi-box">
-      <div class="box-title">Rekomendasi Kost</div>
-      <div class="d-flex flex-wrap mb-2">
-        <button class="filter-btn active">Biaya</button>
-        <button class="filter-btn">Jarak</button>
-        <button class="filter-btn">Fasilitas</button>
-        <button class="filter-btn">Luas</button>
+  <div class="rekomendasi-box">
+    <div class="box-title">Rekomendasi Kost</div>
+
+    <form action="{{ route('kos.search') }}" method="GET">
+      <div class="text-center mb-2">
+        <button type="submit" name="filter" value="harga" class="filter-btn {{ request('filter')=='harga'?'active':'' }}">Biaya</button>
+        <button type="submit" name="filter" value="jarak" class="filter-btn {{ request('filter')=='jarak'?'active':'' }}">Jarak</button>
+        <button type="submit" name="filter" value="fasilitas" class="filter-btn {{ request('filter')=='fasilitas'?'active':'' }}">Fasilitas</button>
+        <button type="submit" name="filter" value="luas" class="filter-btn {{ request('filter')=='luas'?'active':'' }}">Luas</button>
       </div>
 
       <div class="search-box">
-        <img src="{{ asset('assets/material-symbols--home-work-rounded1.svg') }}" alt="Icon Rumah" width="24" style="margin-right:8px;">
-        <input type="text" placeholder="Pilih kost tujuan atau cari kriteria">
-        <button class="search-btn">Cari Kost</button>
+        <input type="text" name="keyword" value="{{ request('keyword') }}" placeholder="Cari nama kost, fasilitas, atau alamat">
+        <button type="submit" class="search-btn">Cari Kost</button>
+      </div>
+    </form>
+  </div>
+</section>
+
+<!-- ================= TITLE ================= -->
+<div class="section-title">
+  <h2>Rekomendasi Kost</h2>
+  <p>Temukan kost terbaik sesuai kebutuhan dan budget.</p>
+</div>
+
+<!-- ================= LIST ================= -->
+<div class="container mt-4">
+  <div class="row">
+    @forelse($koss as $kos)
+    <div class="col-md-4 mb-4 d-flex">
+      <div class="card kos-card w-100 shadow-sm">
+        <img src="{{ $kos->foto_kosan ? asset('assets/img/'.$kos->foto_kosan) : asset('assets/img/default-kosan.jpg') }}">
+        <div class="card-body d-flex flex-column">
+          <h5 class="card-title">{{ $kos->nama_kosan }}</h5>
+          <p class="card-text flex-grow-1">
+            Harga: Rp {{ number_format($kos->harga_sewa,0,',','.') }}<br>
+            Jarak: {{ $kos->jarak_ke_kampus }}<br>
+            Luas: {{ $kos->luas_tanah }}<br>
+            Fasilitas: {{ $kos->fasilitas }}
+          </p>
+          <button class="btn btn-detail mt-auto" data-toggle="modal" data-target="#detail{{ $kos->id }}">Detail</button>
+        </div>
       </div>
     </div>
-  </section>
 
-  <!-- Section Title -->
-  <div class="section-title">
-    <h2>Rekomendasi Kost</h2>
-    <p>Temukan kost terbaik sesuai kebutuhan, budget, dan preferensi.</p>
-  </div>
-
- <!-- Daftar Kosan -->
-<div class="container mt-4">
-    <div class="row">
-        @foreach($koss as $kos)
-        <div class="col-md-4 mb-4 d-flex align-items-stretch">
-            <div class="card kos-card shadow-sm w-100">
-                <img src="{{ $kos->foto_kosan && file_exists(public_path('assets/img/' . $kos->foto_kosan)) 
-                           ? asset('assets/img/' . $kos->foto_kosan) 
-                           : asset('assets/img/default-kosan.jpg') }}" 
-                     class="card-img-top" 
-                     alt="{{ $kos->nama_kosan }}">
-                <div class="card-body d-flex flex-column">
-                    <h5 class="card-title">{{ $kos->nama_kosan }}</h5>
-                    <p class="card-text flex-grow-1">
-                        Harga: Rp {{ number_format($kos->harga_sewa,0,',','.') }}<br>
-                        Jarak ke kampus: {{ $kos->jarak_ke_kampus }}<br>
-                        Luas: {{ $kos->luas_tanah }}<br>
-                        Fasilitas: {{ $kos->fasilitas }}
-                    </p>
-                    <!-- Tombol modal -->
-                    <a href="#" class="btn btn-detail btn-block mt-auto" data-toggle="modal" data-target="#detailModal{{ $kos->id }}">Detail</a>
-                </div>
+    <!-- MODAL -->
+    <div class="modal fade" id="detail{{ $kos->id }}">
+      <div class="modal-dialog modal-lg modal-dialog-centered">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5>{{ $kos->nama_kosan }}</h5>
+            <button class="close" data-dismiss="modal">&times;</button>
+          </div>
+          <div class="modal-body row">
+            <div class="col-md-6">
+              <img src="{{ asset('assets/img/'.$kos->foto_kosan) }}" class="img-fluid rounded">
             </div>
-        </div>
-
-        <!-- Modal Detail Kosan -->
-        <div class="modal fade" id="detailModal{{ $kos->id }}" tabindex="-1" aria-labelledby="detailModalLabel{{ $kos->id }}" aria-hidden="true">
-          <div class="modal-dialog modal-lg modal-dialog-centered">
-            <div class="modal-content">
-              <div class="modal-header">
-                <h5 class="modal-title" id="detailModalLabel{{ $kos->id }}">{{ $kos->nama_kosan }}</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Tutup">
-                  <span aria-hidden="true">&times;</span>
-                </button>
-              </div>
-              <div class="modal-body">
-                <div class="row">
-                  <div class="col-md-6">
-                    <img src="{{ $kos->foto_kosan && file_exists(public_path('assets/img/' . $kos->foto_kosan)) 
-                                ? asset('assets/img/' . $kos->foto_kosan) 
-                                : asset('assets/img/default-kosan.jpg') }}" 
-                         class="img-fluid rounded" 
-                         alt="{{ $kos->nama_kosan }}">
-                  </div>
-                  <div class="col-md-6">
-                    <p><strong>Harga:</strong> Rp {{ number_format($kos->harga_sewa,0,',','.') }}</p>
-                    <p><strong>Luas Kamar:</strong> {{ $kos->luas_tanah }}</p>
-                    <p><strong>Jarak ke Kampus:</strong> {{ $kos->jarak_ke_kampus }}</p>
-                    <p><strong>Fasilitas:</strong> {{ $kos->fasilitas }}</p>
-                    <p><strong>Alamat:</strong> {{ $kos->alamat_kosan }}</p>
-                    <p><strong>Nomor Telepon:</strong> {{ $kos->no_hp }}</p>
-
-                  </div>
-                </div>
-              </div>
-              <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-dismiss="modal">Tutup</button>
-              </div>
+            <div class="col-md-6">
+              <p><b>Harga:</b> Rp {{ number_format($kos->harga_sewa,0,',','.') }}</p>
+              <p><b>Luas:</b> {{ $kos->luas_tanah }}</p>
+              <p><b>Jarak:</b> {{ $kos->jarak_ke_kampus }}</p>
+              <p><b>Fasilitas:</b> {{ $kos->fasilitas }}</p>
+              <p><b>Alamat:</b> {{ $kos->alamat_kosan }}</p>
+              <p><b>No HP:</b> {{ $kos->no_hp }}</p>
             </div>
           </div>
         </div>
-        @endforeach
+      </div>
     </div>
+    @empty
+      <div class="col-12 text-center">
+        <strong>Data kost tidak ditemukan.</strong>
+      </div>
+    @endforelse
+  </div>
 </div>
 
 </body>

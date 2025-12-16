@@ -52,22 +52,6 @@
         </div>
     </li>
 
-    <hr class="sidebar-divider">
-
-    <!-- Tambahan Menarik -->
-    <div class="sidebar-heading">
-        Insight
-    </div>
-
-    <li class="nav-item {{ request()->is('pemilik/statistik*') ? 'active' : '' }}">
-        <a class="nav-link" href="{{ url('/pemilik/statistik') }}">
-            <i class="fas fa-fw fa-chart-line"></i>
-            <span>Statistik Kosan</span>
-        </a>
-    </li>
-
-  
-
     <hr class="sidebar-divider d-none d-md-block">
 
     <!-- Logout -->

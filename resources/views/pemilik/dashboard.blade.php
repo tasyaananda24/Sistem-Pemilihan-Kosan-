@@ -4,7 +4,21 @@
 <div class="container py-4">
     <h2 class="mb-4 text-primary">Dashboard Pemilik</h2>
 
-    {{-- Statistik --}}
+    {{-- ======================= NOTIFIKASI ======================= --}}
+    @if(isset($notifikasi) && $notifikasi->count() > 0)
+        <div class="alert alert-info shadow-sm">
+            <h5 class="mb-2">Notifikasi Terbaru</h5>
+            <ul class="mb-0">
+                @foreach($notifikasi as $n)
+                    <li>{{ $n->data['message'] }}</li>
+                @endforeach
+            </ul>
+        </div>
+    @endif
+    {{-- ========================================================== --}}
+
+
+    {{-- ======================= STATISTIK ======================= --}}
     <div class="row mb-4">
         <div class="col-md-3">
             <div class="card text-white bg-primary shadow-sm">
@@ -14,6 +28,7 @@
                 </div>
             </div>
         </div>
+
         <div class="col-md-3">
             <div class="card text-white bg-success shadow-sm">
                 <div class="card-body">
@@ -22,6 +37,7 @@
                 </div>
             </div>
         </div>
+
         <div class="col-md-3">
             <div class="card text-white bg-info shadow-sm">
                 <div class="card-body">
@@ -30,6 +46,7 @@
                 </div>
             </div>
         </div>
+
         <div class="col-md-3">
             <div class="card text-white bg-warning shadow-sm">
                 <div class="card-body">
@@ -39,12 +56,15 @@
             </div>
         </div>
     </div>
+    {{-- ========================================================== --}}
 
-    {{-- Daftar Kos --}}
+
+    {{-- ======================= DAFTAR KOS ======================= --}}
     <div class="card shadow-sm">
         <div class="card-header bg-secondary text-white">
             <h5 class="mb-0">Daftar Kos Saya</h5>
         </div>
+
         <div class="card-body">
             @if($kosan->count() > 0)
                 <table class="table table-bordered table-hover">
@@ -55,9 +75,9 @@
                             <th>Alamat</th>
                             <th>Jumlah Kamar</th>
                             <th>Status Verifikasi</th>
-                    
                         </tr>
                     </thead>
+
                     <tbody>
                         @foreach($kosan as $index => $k)
                         <tr>
@@ -65,14 +85,15 @@
                             <td>{{ $k->nama_kosan }}</td>
                             <td>{{ $k->alamat_kosan }}</td>
                             <td>{{ $k->jumlah_kamar ?? '-' }}</td>
+
+                            {{-- PERBAIKAN STATUS VERIFIKASI AGAR AKURAT --}}
                             <td>
-                                @if($k->status_verifikasi)
+                                @if((int) $k->status_verifikasi === 1)
                                     <span class="badge bg-success">Terverifikasi</span>
                                 @else
-                                    <span class="badge bg-warning text-dark">Belum</span>
+                                    <span class="badge bg-warning text-dark">Belum Terverifikasi</span>
                                 @endif
                             </td>
-                          
                         </tr>
                         @endforeach
                     </tbody>
@@ -82,5 +103,6 @@
             @endif
         </div>
     </div>
+    {{-- ========================================================== --}}
 </div>
 @endsection

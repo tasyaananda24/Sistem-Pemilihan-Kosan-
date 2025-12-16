@@ -11,12 +11,15 @@ use App\Http\Controllers\LandingController;
 
 /*
 |--------------------------------------------------------------------------
-| Halaman Utama
+| Halaman Utama (Landing Page)
 |--------------------------------------------------------------------------
 */
 Route::get('/', [LandingController::class, 'index'])->name('home');
 
-// 🔽 Route detail kosan untuk halaman depan
+/* ================= TAMBAHAN SEARCH & FILTER ================= */
+Route::get('/search', [LandingController::class, 'search'])->name('kos.search');
+
+/* ================= DETAIL KOS ================= */
 Route::get('/kos/{id}', [KosanController::class, 'show'])->name('kos.detail');
 
 /*
@@ -41,25 +44,17 @@ Route::controller(AuthController::class)->group(function () {
 */
 Route::prefix('admin')->name('admin.')->group(function () {
 
-    // Dashboard admin (pakai controller)
     Route::get('dashboard', [AdminController::class, 'index'])->name('dashboard');
 
-    // Halaman SPK
     Route::get('spk', [SawController::class, 'index'])->name('spk.index');
-
-    // ➕ (DITAMBAHKAN) Laporan SPK – Kosan terbaik versi SAW
     Route::get('laporan', [SawController::class, 'laporan'])->name('laporan.index');
 
-    // Verifikasi Kosan Admin
     Route::controller(KosanAdminController::class)->group(function () {
-        Route::get('kosan/verifikasi', 'index')->name('kosan.verifikasi'); // list kosan pending
-        Route::post('kosan/verifikasi/{id}', 'verifikasi')->name('kosan.verifikasi.update'); // approve / reject
-
-        // Tampilkan semua kosan yang sudah di-approve (Admin)
+        Route::get('kosan/verifikasi', 'index')->name('kosan.verifikasi');
+        Route::post('kosan/verifikasi/{id}', 'verifikasi')->name('kosan.verifikasi.update');
         Route::get('kosan/approved', 'approved')->name('kosan.approved');
     });
 
-    // Kriteria & Penilaian (SPK)
     Route::resource('kriteria', \App\Http\Controllers\Admin\KriteriaController::class)
          ->parameters(['kriteria' => 'kriteria']);
 
@@ -69,28 +64,20 @@ Route::prefix('admin')->name('admin.')->group(function () {
 
 /*
 |--------------------------------------------------------------------------
-| Dashboard & Menu Pemilik
+| Dashboard Pemilik
 |--------------------------------------------------------------------------
 */
 Route::prefix('pemilik')->name('pemilik.')->group(function () {
 
-    // Dashboard utama pemilik
     Route::get('dashboard', [PemilikController::class, 'dashboard'])->name('dashboard');
 
-    /*
-    |--------------------------------------------------------------------------
-    | CRUD Kosan (Pemilik)
-    |--------------------------------------------------------------------------
-    */
     Route::controller(KosanController::class)->group(function () {
-        Route::get('kosan', 'index')->name('kosan.index'); // hanya kosan approved milik pemilik
+        Route::get('kosan', 'index')->name('kosan.index');
         Route::get('kosan/create', 'create')->name('kosan.create');
         Route::post('kosan', 'store')->name('kosan.store');
         Route::get('kosan/{id}/edit', 'edit')->name('kosan.edit');
         Route::put('kosan/{id}', 'update')->name('kosan.update');
         Route::delete('kosan/{id}', 'destroy')->name('kosan.destroy');
-
-        // Menu status verifikasi pemilik
         Route::get('kosan/verifikasi', 'verifikasiIndex')->name('kosan.verifikasi'); 
     });
 });
